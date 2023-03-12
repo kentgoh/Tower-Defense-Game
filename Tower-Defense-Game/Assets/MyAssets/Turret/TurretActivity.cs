@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
-using static TurretAI;
 
 public class TurretActivity : MonoBehaviour
 {
@@ -19,7 +18,6 @@ public class TurretActivity : MonoBehaviour
     public float distAway;
     public float bulletCurrentCooldown;
 
-    // Start is called before the first frame update
     void Start()
     {
         InvokeRepeating("CheckForEnemy",0, 0.5f);
@@ -32,7 +30,6 @@ public class TurretActivity : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (currentTarget != null)

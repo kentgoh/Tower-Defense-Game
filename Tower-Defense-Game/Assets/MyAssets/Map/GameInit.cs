@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using TMPro;
 using UnityEngine;
 
@@ -14,7 +15,10 @@ public class GameInit : MonoBehaviour
         public Boolean showAllTurret = false;
     }
     public DebugMode debugMode;
-
+    
+    [Space]
+    
+    public GameObject turretDetailsBackground;
     // Turret
     [Serializable]
     public struct Turret
@@ -24,14 +28,38 @@ public class GameInit : MonoBehaviour
         public GameObject turretDetailsUI;
     }
     public List<Turret> turrets;
-    public GameObject turretDetailsBackground;
-
     // Disable plane by index
     public List<int> turretDisabledPlaneIndex;
     // Set facing direction by index
     public List<int> turretInitDirectionRightIndex;
     public List<int> turretInitDirectionBottomIndex;
     public List<int> turretInitDirectionLeftIndex;
+
+    // Enemy
+    [Serializable]
+    public struct Enemy
+    {
+        public string name;
+        public GameObject enemyPrefab;
+    }
+    public List<Enemy> enemies;
+
+    // Spawner
+    [Serializable]
+    public struct EnemySpawn
+    {
+        public string enemyName;
+        public int count;
+        public int interval;
+    }
+
+    [Serializable]
+    public struct Wave
+    {
+        public List<EnemySpawn> enemySpawns;
+        public int intervalBeforeNextWave;
+    }
+    public List<Wave> waves;
 
     void Start()
     {

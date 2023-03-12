@@ -92,7 +92,6 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         GameObject selectedUI = eventData.pointerCurrentRaycast.gameObject;
-        Debug.Log(selectedUI.tag);
 
         // Check selected turret UI
         displayTurretUISelection(selectedUI);

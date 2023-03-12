@@ -1,30 +1,36 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 
 public class GameActivity : MonoBehaviour
 {
-    public float time = -1;
-    public GameObject timerUI;
     public GameObject pauseUI;
 
-    // Updated from pointer handle in UIActivity script
+    // Timer
+    public float time = 0;
+    public int currentWave = 1;
+    public float timeBeforeNextWave;
+    public float timeForThisWave;
+    public Boolean waveSpawnCompleted = false;
+
+    // Turret
     public string selectedTurretName;
 
     // Start is called before the first frame update
     void Start()
     {
         Time.timeScale = 1;
-        StartCoroutine("addTimeInSeconds");
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (Time.timeScale == 1)
+        {
+            AddTime();
+            CountDownTimeForThisWave();
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             // Pause game
@@ -44,12 +50,14 @@ public class GameActivity : MonoBehaviour
         }
     }
 
-    public IEnumerator addTimeInSeconds()
+    public void AddTime()
     {
-        while(Time.timeScale == 1) {
-            time++;
-            timerUI.GetComponentInChildren<TMP_Text>().text = time.ToString();
-            yield return new WaitForSeconds(1);
-        }
+            time += Time.deltaTime;
+    }
+
+    public void CountDownTimeForThisWave()
+    {
+        if(timeForThisWave > 0)
+            timeForThisWave -= Time.deltaTime;
     }
 }

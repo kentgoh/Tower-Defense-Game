@@ -1,67 +1,91 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using static GameInit;
 
 public class SpawnActivity : MonoBehaviour
 {
-    public GameObject[] enemies;
-    public float timer;
+    // All details from gameSystem
+    private GameObject gameSystem;
+    private List<Enemy> enemies;
+    private List<Wave> waves;
+    private int totalWave;
+    private int currentWaveIndex;
 
-    public int currentPhase = 0;
-
-    public float phaseOneSpawnInterval = 1.0f;
-    public float phaseOneSpawnEnd = 10;
-    
-    public float phaseTwoSpawnInterval = 2.0f;
-    public float phaseTwoSpawnEnd = 20;
-    
-    public float phaseThreeSpawnInterval = 5.0f;
-    public float phaseThreeSpawnEnd = 40;
-
-    // Start is called before the first frame update
     void Start()
     {
+        gameSystem = GameObject.FindGameObjectWithTag("GameSystem");
+        enemies = gameSystem.GetComponent<GameInit>().enemies;
+        waves = gameSystem.GetComponent<GameInit>().waves;
+        totalWave = waves.Count;
+        currentWaveIndex = 0;
 
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        timer += Time.deltaTime;
-        if (timer < phaseOneSpawnEnd && currentPhase == 0){
-            InvokeRepeating("PhaseOneSpawn", 0, phaseOneSpawnInterval);
-            currentPhase = 1;
-        }
-        if(timer > phaseOneSpawnEnd && currentPhase == 1)
-        {
-            CancelInvoke("PhaseOneSpawn");
-            InvokeRepeating("PhaseTwoSpawn", 0, phaseTwoSpawnInterval);
-            currentPhase = 2;
-        }
-        if (timer > phaseTwoSpawnEnd && currentPhase == 2)
-        {
-            CancelInvoke("PhaseTwoSpawn");
-            InvokeRepeating("PhaseThreeSpawn", 0, phaseThreeSpawnInterval);
-            currentPhase = 3;
-        }
-        if (timer > phaseThreeSpawnEnd && currentPhase == 3)
-        {
-            CancelInvoke("PhaseThreeSpawn");
-            currentPhase = 4;
-        }
+        StartCoroutine(EnemySpawn());
     }
 
-    void PhaseOneSpawn()
+    public IEnumerator EnemySpawn()
     {
-        Instantiate(enemies[0], gameObject.transform.position, Quaternion.identity);
-    }
-    void PhaseTwoSpawn()
-    {
-        Instantiate(enemies[1], gameObject.transform.position, Quaternion.identity);
+        // End this Coroutine when all wave has been completed
+        while (currentWaveIndex < totalWave) {
+            if (Time.timeScale == 1)
+            {
+                Wave wave = waves[currentWaveIndex];
+
+                // Get total interval for this wave
+                float totalInterval = 0;
+                wave.enemySpawns.ForEach(enemySpawn =>
+                {
+                    totalInterval += enemySpawn.interval;
+                });
+                totalInterval += wave.intervalBeforeNextWave;
+
+                gameSystem.GetComponent<GameActivity>().timeBeforeNextWave = wave.intervalBeforeNextWave;
+                gameSystem.GetComponent<GameActivity>().timeForThisWave = totalInterval;
+
+                for (int j = 0; j < wave.enemySpawns.Count; j++)
+                {
+                    EnemySpawn enemySpawn = wave.enemySpawns[j];
+                    float secondsPerSpawn = enemySpawn.interval / enemySpawn.count;
+
+                    StartCoroutine(EnemySpawnByWave(enemySpawn, secondsPerSpawn));
+                    yield return new WaitForSeconds(enemySpawn.interval);
+                }
+
+                gameSystem.GetComponent<GameActivity>().waveSpawnCompleted = true;
+
+                // Delay before next wave spawn
+                yield return new WaitForSeconds(wave.intervalBeforeNextWave);
+
+                currentWaveIndex++;
+                // Stop adding wave count if it is last wave
+                if (currentWaveIndex < totalWave) {
+                    gameSystem.GetComponent<GameActivity>().waveSpawnCompleted = false;
+                    gameSystem.GetComponent<GameActivity>().currentWave = currentWaveIndex + 1;
+                }
+
+            }
+        }
     }
 
-    void PhaseThreeSpawn()
+    public IEnumerator EnemySpawnByWave(EnemySpawn enemySpawn, float secondPerSpawn)
     {
-        Instantiate(enemies[2], gameObject.transform.position, Quaternion.identity);
+        int enemyCount = enemySpawn.count;
+
+        // End this Coroutine when all enemy has been spawned for this enemySpawn in this wave
+        while(enemyCount > 0) {
+            if (Time.timeScale == 1)
+            {
+                Enemy enemy = enemies.Find(x => x.name.Equals(enemySpawn.enemyName));
+                if (enemy.enemyPrefab != null) {
+                    Instantiate(enemy.enemyPrefab, gameObject.transform.position, Quaternion.identity);
+                    enemyCount--;
+                }
+            }
+
+            yield return new WaitForSeconds(secondPerSpawn);
+        }
     }
+
 }
