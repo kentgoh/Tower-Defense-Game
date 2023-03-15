@@ -47,7 +47,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  speed: 1
+  turretName: 
+  speed: 2
+  bulletPoint: {fileID: 0}
+  laserExistTime: 0
+  lockOn: 0
 --- !u!136 &8299260857210438879
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -56,10 +60,10 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2661728340864448158}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
-  m_Radius: 0.1
-  m_Height: 0.36
+  m_Radius: 0.12
+  m_Height: 0.38
   m_Direction: 2
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &2662066519868659400

@@ -77,7 +77,7 @@ public class SpawnActivity : MonoBehaviour
         while(enemyCount > 0) {
             if (Time.timeScale == 1)
             {
-                Enemy enemy = enemies.Find(x => x.name.Equals(enemySpawn.enemyName));
+                Enemy enemy = enemies.Find(x => x.enemyType.Equals(enemySpawn.enemyType));
                 if (enemy.enemyPrefab != null) {
                     Instantiate(enemy.enemyPrefab, gameObject.transform.position, Quaternion.identity);
                     enemyCount--;

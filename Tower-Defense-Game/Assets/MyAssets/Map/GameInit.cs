@@ -36,10 +36,17 @@ public class GameInit : MonoBehaviour
     public List<int> turretInitDirectionLeftIndex;
 
     // Enemy
+    public enum EnemyType
+    {
+        Raider,
+        Drone,
+        Boulder
+    }
+
     [Serializable]
     public struct Enemy
     {
-        public string name;
+        public EnemyType enemyType;
         public GameObject enemyPrefab;
     }
     public List<Enemy> enemies;
@@ -48,7 +55,7 @@ public class GameInit : MonoBehaviour
     [Serializable]
     public struct EnemySpawn
     {
-        public string enemyName;
+        public EnemyType enemyType;
         public int count;
         public int interval;
     }
