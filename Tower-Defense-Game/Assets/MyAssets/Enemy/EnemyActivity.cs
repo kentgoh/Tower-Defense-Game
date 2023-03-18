@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using static GameInit;
 
 public class EnemyActivity : MonoBehaviour
@@ -13,8 +14,10 @@ public class EnemyActivity : MonoBehaviour
     public EnemyType enemyType;
     private Animator animator;
 
+    public int maxHealthPoint;
     public int healthPoint;
-    private TMP_Text healthPointUI;
+    private GameObject healthBar;
+    private Boolean isDamaged = false;
 
     private Renderer[] rends;
     private Color originalColor;
@@ -34,9 +37,12 @@ public class EnemyActivity : MonoBehaviour
         wayPointList = GameObject.FindGameObjectWithTag("WayPointList");
         cameraLocation = GameObject.FindGameObjectWithTag("MainCamera");
 
-        if (gameObject.GetComponentInChildren<TMP_Text>()){
-            healthPointUI = gameObject.GetComponentInChildren<TMP_Text>();
+        if (transform.Find("Canvas/HealthBar"))
+        {
+            healthBar = transform.Find("Canvas/HealthBar").gameObject;
+            GameObject healthBarFill = healthBar.transform.Find("Fill").gameObject;
         }
+
         if (gameObject.GetComponent<Animator>())
             animator = gameObject.GetComponent<Animator>();
 
@@ -62,20 +68,23 @@ public class EnemyActivity : MonoBehaviour
         switch (enemyType)
         {
             case EnemyType.Raider:
-                { 
-                    healthPoint = 5;
+                {
+                    maxHealthPoint = 10;
+                    healthPoint = 10;
                     speed = 0.5f;
                     break;
                 }
             case EnemyType.Drone:
                 {
-                    healthPoint = 10;
+                    maxHealthPoint = 5;
+                    healthPoint = 5;
                     speed = 0.8f;
                     break;
                 }
             case EnemyType.Boulder:
                 {
-                    healthPoint = 50;
+                    maxHealthPoint = 30;
+                    healthPoint = 30;
                     speed = 0.3f;
                     break;
                 }
@@ -104,7 +113,7 @@ public class EnemyActivity : MonoBehaviour
 
         // Move object to wayPoint
         transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);
-        transform.LookAt(destinatedWayPoint.position);
+        transform.Find("Model").LookAt(destinatedWayPoint.position);
 
     }
 
@@ -119,7 +128,10 @@ public class EnemyActivity : MonoBehaviour
         }
 
         if (targetTag == "Bullet")
-        {  
+        {
+            if (!isDamaged)
+                isDamaged = true;
+
             healthPoint--;
             // If no health point left
             //      Destroy object
@@ -150,9 +162,13 @@ public class EnemyActivity : MonoBehaviour
 
     public void DisplayHealthPoint()
     {
-        if(healthPointUI != null) { 
-            healthPointUI.text = healthPoint.ToString();
-            healthPointUI.transform.rotation = Quaternion.LookRotation(healthPointUI.transform.position - cameraLocation.transform.position);
+        if (healthBar != null && isDamaged)
+        {
+            healthBar.SetActive(true);
+
+            Image fill = healthBar.transform.Find("Fill").GetComponent<Image>();
+            float fillRange = Mathf.InverseLerp(maxHealthPoint, 0, healthPoint);
+            fill.fillAmount = Mathf.Lerp(1, 0, fillRange);
         }
     }
 
@@ -161,7 +177,7 @@ public class EnemyActivity : MonoBehaviour
         if (animator != null)
             animator.SetBool("IsDestroy", true);
 
-        Destroy(healthPointUI);
+        Destroy(healthBar);
         yield return new WaitForSeconds(1);
         Destroy(gameObject);
     }
