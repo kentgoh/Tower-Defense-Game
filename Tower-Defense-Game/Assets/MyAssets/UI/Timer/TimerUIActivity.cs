@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static GameInit;
 
-public class TimerActivity : MonoBehaviour
+public class TimerUIActivity : MonoBehaviour
 {
     // All details from gameSystem
     private GameObject gameSystem;

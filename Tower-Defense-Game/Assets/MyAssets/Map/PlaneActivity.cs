@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static GameInit;
 
@@ -132,6 +133,9 @@ public class PlaneActivity : MonoBehaviour
                     turretCreated = true;
                     turretCreateAvailability = false;
                     rend.material.color = disabledColor;
+
+                    gameSystem.GetComponent<GameActivity>().selectedTurretName = null;
+                    Destroy(gameSystem.GetComponent<GameActivity>().selectedTurretUI);
                     break;
                 }
             }

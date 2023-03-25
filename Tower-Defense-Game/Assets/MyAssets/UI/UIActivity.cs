@@ -48,7 +48,7 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
             Boolean nameMatched = false;
             foreach (RaycastResult result in results)
             {
-               foreach(Turret turret in turrets)
+                foreach(Turret turret in turrets)
                 {
                     // disable all UI first, then enable the selected one only
                     if (result.gameObject.name.Equals(turret.name))
@@ -101,7 +101,7 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
     {
         GameObject parentOfSelectedUI = selectedUI.transform.parent.gameObject;
 
-        if (parentOfSelectedUI.tag.Equals("TurretUI"))
+        if (selectedUI.tag.Equals("TurretUI"))
         {
             // Disable all border for others turret UI
             GameObject.FindGameObjectsWithTag("TurretUIBorder").ToList().ForEach(turretUIBorder =>
@@ -112,6 +112,7 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
             parentOfSelectedUI.transform.Find("Border").gameObject.SetActive(true);
         }
 
-        gameSystem.GetComponent<GameActivity>().selectedTurretName = parentOfSelectedUI.name;
+        gameSystem.GetComponent<GameActivity>().selectedTurretName = selectedUI.name;
+        gameSystem.GetComponent<GameActivity>().selectedTurretUI = parentOfSelectedUI;
     }
 }

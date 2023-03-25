@@ -24,10 +24,13 @@ public class GameInit : MonoBehaviour
     public struct Turret
     {
         public string name;
+        public int turretUICooldown;
         public GameObject turretPrefab;
+        public GameObject turretUI;
         public GameObject turretDetailsUI;
     }
     public List<Turret> turrets;
+
     // Disable plane by index
     public List<int> turretDisabledPlaneIndex;
     // Set facing direction by index

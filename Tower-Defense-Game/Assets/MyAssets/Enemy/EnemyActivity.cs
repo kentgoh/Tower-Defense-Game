@@ -71,21 +71,21 @@ public class EnemyActivity : MonoBehaviour
                 {
                     maxHealthPoint = 10;
                     healthPoint = 10;
-                    speed = 0.5f;
+                    speed = 0.2f;
                     break;
                 }
             case EnemyType.Drone:
                 {
                     maxHealthPoint = 5;
                     healthPoint = 5;
-                    speed = 0.8f;
+                    speed = 0.5f;
                     break;
                 }
             case EnemyType.Boulder:
                 {
                     maxHealthPoint = 30;
                     healthPoint = 30;
-                    speed = 0.3f;
+                    speed = 0.1f;
                     break;
                 }
         }

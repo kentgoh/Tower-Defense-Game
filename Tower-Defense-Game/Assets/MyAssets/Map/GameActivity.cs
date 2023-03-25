@@ -13,13 +13,19 @@ public class GameActivity : MonoBehaviour
     public float timeForThisWave;
     public Boolean waveSpawnCompleted = false;
 
+    // Resources
+    public int resources = 0;
+    public int resourcesPerSecond = 0;
+
     // Turret
     public string selectedTurretName;
+    public GameObject selectedTurretUI;
 
     // Start is called before the first frame update
     void Start()
     {
         Time.timeScale = 1;
+        StartCoroutine("AddResources");
     }
 
     // Update is called once per frame
@@ -52,12 +58,24 @@ public class GameActivity : MonoBehaviour
 
     public void AddTime()
     {
-            time += Time.deltaTime;
+        time += Time.deltaTime;
     }
 
     public void CountDownTimeForThisWave()
     {
         if(timeForThisWave > 0)
             timeForThisWave -= Time.deltaTime;
+    }
+
+    public IEnumerator AddResources()
+    {
+        while (true)
+        {
+            if (Time.timeScale == 1)
+            {
+                yield return new WaitForSeconds(1);
+                resources += resourcesPerSecond;
+            }
+        }
     }
 }

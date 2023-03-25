@@ -321,6 +321,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraLocation: {fileID: 0}
   enemyType: 1
+  maxHealthPoint: 0
   healthPoint: 0
   speed: 0
   destinatedWayPointIndex: 0
@@ -697,6 +698,10 @@ PrefabInstance:
     - target: {fileID: 1858247480610268711, guid: 9eece6cb566c2444481963a13cfd747d, type: 3}
       propertyPath: m_Name
       value: HealthBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 1858247480610268711, guid: 9eece6cb566c2444481963a13cfd747d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5127516746556181866, guid: 9eece6cb566c2444481963a13cfd747d, type: 3}
       propertyPath: m_Pivot.x
