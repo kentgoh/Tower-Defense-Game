@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameInit : MonoBehaviour
@@ -16,8 +17,6 @@ public class GameInit : MonoBehaviour
     }
     public DebugMode debugMode;
     
-    [Space]
-    
     public GameObject turretDetailsBackground;
     // Turret
     [Serializable]
@@ -25,6 +24,7 @@ public class GameInit : MonoBehaviour
     {
         public string name;
         public int turretUICooldown;
+        public int turretResourcesCost;
         public GameObject turretPrefab;
         public GameObject turretUI;
         public GameObject turretDetailsUI;
@@ -71,6 +71,15 @@ public class GameInit : MonoBehaviour
     }
     public List<Wave> waves;
 
+    [Serializable]
+    public enum TurretUIColor
+    {
+        notAvailable,
+        available,
+        selected
+    }
+
+
     void Start()
     {
         CheckDebugMode();
@@ -116,5 +125,16 @@ public class GameInit : MonoBehaviour
                 gameObject.SetActive(false);
             }
         }
+    }
+
+    public string GetTurretUIColor(TurretUIColor turretUIColor)
+    {
+        if (turretUIColor == TurretUIColor.available)
+            return "#19870F";
+        else if (turretUIColor == TurretUIColor.selected)
+            return "#00FF22";
+        else
+            return "#8C0A0A";
+
     }
 }

@@ -21,7 +21,6 @@ public class GameActivity : MonoBehaviour
     public string selectedTurretName;
     public GameObject selectedTurretUI;
 
-    // Start is called before the first frame update
     void Start()
     {
         Time.timeScale = 1;
@@ -78,4 +77,5 @@ public class GameActivity : MonoBehaviour
             }
         }
     }
+
 }

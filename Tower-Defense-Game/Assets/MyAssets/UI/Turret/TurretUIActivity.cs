@@ -33,11 +33,13 @@ public class TurretUIActivity : MonoBehaviour
         gameSystem = GameObject.FindGameObjectWithTag("GameSystem");
         turrets = gameSystem.GetComponent<GameInit>().turrets;
 
+        // Decoration animation
         if (transform.Find("Decoration/BigGear/Image").gameObject)
             bigGearUI = transform.Find("Decoration/BigGear/Image").gameObject;
         if (transform.Find("Decoration/SmallGear/Image").gameObject)
             smallGearUI = transform.Find("Decoration/SmallGear/Image").gameObject;
 
+        // Turret UI activity
         if (transform.Find("NextTurret/Turret").gameObject)
             nextTurretUIParent = transform.Find("NextTurret/Turret").gameObject;
         if (transform.Find("AvailableTurret/Turrets").gameObject)
@@ -56,7 +58,8 @@ public class TurretUIActivity : MonoBehaviour
         if (Time.timeScale == 1)
         {
             DecorationRotation();
-            GenerateNewTurret();
+            GenerateNewTurretUI();
+            UpdateTurretUIAvailability();
         }
     }
 
@@ -64,7 +67,7 @@ public class TurretUIActivity : MonoBehaviour
         bigGearUI.transform.Rotate(Vector3.forward, 50 * Time.deltaTime);
         smallGearUI.transform.Rotate(Vector3.back, 50 * Time.deltaTime);
     }
-    public void GenerateNewTurret()
+    public void GenerateNewTurretUI()
     {
         // Set the turretUI as the child of nextTurretUI
         if (nextTurretUIParent.transform.childCount < 2) {
@@ -74,6 +77,12 @@ public class TurretUIActivity : MonoBehaviour
             createdNextTurretUI = Instantiate(turrets[randomTurretIndex].turretUI, nextTurretUIParent.transform);
             createdNextTurretUI.transform.SetAsFirstSibling();
             
+            // Set the available count and border to not active
+            if(createdNextTurretUI.transform.Find("AvailableCount"))
+                createdNextTurretUI.transform.Find("AvailableCount").gameObject.SetActive(false);
+            if (createdNextTurretUI.transform.Find("Border"))
+                createdNextTurretUI.transform.Find("Border").gameObject.SetActive(false);
+
             // Start loading the cooldown
             nextTurretUICooldown = turrets[randomTurretIndex].turretUICooldown;
             nextTurretUILoader.SetActive(true);
@@ -84,8 +93,8 @@ public class TurretUIActivity : MonoBehaviour
         // Push the turretUI to available turretUI
         if (BufferTurretUI(turrets[randomTurretIndex].turretUICooldown, nextTurretUICooldown, nextTurretUILoader))
         {
-            createdNextTurretUI.transform.SetParent(availableTurretUIParent.transform);
-            nextTurretUILoader.SetActive(false);
+            AddTurretUICount(createdNextTurretUI);
+            Destroy(createdNextTurretUI);
         }
 
     }
@@ -98,5 +107,51 @@ public class TurretUIActivity : MonoBehaviour
         // Update the loader text
         nextTurretUILoaderText.text = Mathf.Ceil(currentTurretUICooldown).ToString();
         return (currentTurretUICooldown <= 0);
+    }
+
+    public void AddTurretUICount(GameObject createdNextTurretUI)
+    {
+        string turretNameWithoutClone = createdNextTurretUI.name.Replace("(Clone)", "");
+
+        if (availableTurretUIParent.transform.Find(turretNameWithoutClone))
+        {
+            // Increase the text count value for the selected turretUI
+            Transform turretUI = availableTurretUIParent.transform.Find(turretNameWithoutClone);
+            int count = int.Parse(turretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
+            count++;
+            turretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text = count.ToString();
+        }
+    }
+    
+    public void UpdateTurretUIAvailability()
+    {
+        GameInit gameInitScript = gameSystem.GetComponent<GameInit>();
+        GameActivity gameActivityScript = gameSystem.GetComponent<GameActivity>();
+
+        foreach (Transform child in availableTurretUIParent.transform)
+        {
+            // Get resourcesNeeded and count value from turretUI
+            int turretUIResourcesNeeded = int.Parse(child.Find("ResourcesNeeded").GetComponent<TMP_Text>().text);
+            int turretUIAvailableCount = int.Parse(child.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
+
+            // Get resources value from GameActivity script
+            int currentResources = gameActivityScript.resources;
+
+            // Get color string from GameInit script
+            Color color;
+            TurretUIColor turretUIColor = TurretUIColor.notAvailable;
+
+            if((gameActivityScript.selectedTurretName.Length > 0) && child.name.Contains(gameActivityScript.selectedTurretName))
+                turretUIColor = TurretUIColor.selected;
+            else if (currentResources >= turretUIResourcesNeeded && turretUIAvailableCount > 0)
+                turretUIColor = TurretUIColor.available;
+
+            // Get color by hexastring
+            ColorUtility.TryParseHtmlString(
+                gameInitScript.GetTurretUIColor(turretUIColor),
+                out color
+            );
+            child.Find("Border").GetComponent<Image>().color = color;
+        }
     }
 }

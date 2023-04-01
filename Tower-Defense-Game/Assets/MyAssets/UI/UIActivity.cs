@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -103,16 +104,27 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
 
         if (selectedUI.tag.Equals("TurretUI"))
         {
-            // Disable all border for others turret UI
-            GameObject.FindGameObjectsWithTag("TurretUIBorder").ToList().ForEach(turretUIBorder =>
+            // Get resources value from gameActivityScript
+            GameActivity gameActivityScript = gameSystem.GetComponent<GameActivity>();
+            int resources = gameActivityScript.resources;
+            
+            // Get turretResourcesCost from gameInitScript
+            int turretResourcesCost = turrets.Find(turret => (turret.name == selectedUI.name)).turretResourcesCost;
+            // Get turretCount from the turretUI
+            int turretCount = int.Parse(selectedUI.transform.parent.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
+
+            if (resources >= turretResourcesCost)
             {
-                turretUIBorder.SetActive(false);
-            });
-            // Enable the border of selected turret UI
-            parentOfSelectedUI.transform.Find("Border").gameObject.SetActive(true);
+                if(turretCount > 0) { 
+                    gameActivityScript.selectedTurretName = selectedUI.name;
+                    gameActivityScript.selectedTurretUI = parentOfSelectedUI;
+                }
+                else
+                    Debug.Log("Turret not available to build");
+            }
+            else
+                Debug.Log("You don't have sufficient coin to build this turret");
         }
 
-        gameSystem.GetComponent<GameActivity>().selectedTurretName = selectedUI.name;
-        gameSystem.GetComponent<GameActivity>().selectedTurretUI = parentOfSelectedUI;
     }
 }

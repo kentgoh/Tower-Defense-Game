@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using static GameInit;
@@ -134,8 +135,19 @@ public class PlaneActivity : MonoBehaviour
                     turretCreateAvailability = false;
                     rend.material.color = disabledColor;
 
-                    gameSystem.GetComponent<GameActivity>().selectedTurretName = null;
-                    Destroy(gameSystem.GetComponent<GameActivity>().selectedTurretUI);
+                    // Reset the selected turret details in gameSystem
+                    GameActivity gameActivityScript = gameSystem.GetComponent<GameActivity>();
+                    int turretResourcesCost = turrets.Find(turret => (turret.name == gameActivityScript.selectedTurretName)).turretResourcesCost;
+
+                    gameActivityScript.selectedTurretName = "";
+                    gameActivityScript.resources -= turretResourcesCost;
+
+                    // Decrease the text count value for the selected turretUI
+                    Transform selectedTurretUI = gameActivityScript.selectedTurretUI.transform;
+                    int count = int.Parse(selectedTurretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
+                    count--;
+                    selectedTurretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text = count.ToString();
+
                     break;
                 }
             }
