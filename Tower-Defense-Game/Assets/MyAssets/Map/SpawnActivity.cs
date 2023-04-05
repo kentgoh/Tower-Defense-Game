@@ -29,7 +29,7 @@ public class SpawnActivity : MonoBehaviour
     {
         // End this Coroutine when all wave has been completed
         while (currentWaveIndex < totalWave) {
-            if (Time.timeScale == 1)
+            if (Time.timeScale != 0)
             {
                 Wave wave = waves[currentWaveIndex];
 
@@ -75,7 +75,7 @@ public class SpawnActivity : MonoBehaviour
 
         // End this Coroutine when all enemy has been spawned for this enemySpawn in this wave
         while(enemyCount > 0) {
-            if (Time.timeScale == 1)
+            if (Time.timeScale != 0)
             {
                 Enemy enemy = enemies.Find(x => x.enemyType.Equals(enemySpawn.enemyType));
                 if (enemy.enemyPrefab != null) {

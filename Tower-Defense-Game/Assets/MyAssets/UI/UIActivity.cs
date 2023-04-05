@@ -36,7 +36,7 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
         EventSystem.current.RaycastAll(eventData, results);
 
         displayTurretDetailsUI(results);
-     
+       
     }
 
     // ======================= MOUSE ACTIVITY ======================= 

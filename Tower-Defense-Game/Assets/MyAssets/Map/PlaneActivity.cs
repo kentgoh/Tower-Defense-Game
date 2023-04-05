@@ -64,8 +64,8 @@ public class PlaneActivity : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        // Add hover color and show the expected turret 
-        if (turretCreateAvailability)
+        // Add hover color and show the expected turret when game is not paused or ended
+        if (turretCreateAvailability && Time.timeScale != 0)
         {
             rend.material.color = hoverColor;
             showSelectedTurret();
@@ -84,19 +84,22 @@ public class PlaneActivity : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if (turretCreateAvailability)
-        {
-            Destroy(tempSelectedTurret);
-            createSelectedTurret();
-        }
-        else
-        {
-            // Turret existed on top of plane
-            if (turretCreated)
-                Debug.Log("Turret does created on top of plane, kindly remove it first.");
-            // Plane has been disabled for turret building
+        // Stop turret creation when game is paused or ended
+        if(Time.timeScale != 0) { 
+            if (turretCreateAvailability)
+            {
+                Destroy(tempSelectedTurret);
+                createSelectedTurret();
+            }
             else
-                Debug.Log("Turret not able to build on this plane.");
+            {
+                // Turret existed on top of plane
+                if (turretCreated)
+                    Debug.Log("Turret does created on top of plane, kindly remove it first.");
+                // Plane has been disabled for turret building
+                else
+                    Debug.Log("Turret not able to build on this plane.");
+            }
         }
     }
 

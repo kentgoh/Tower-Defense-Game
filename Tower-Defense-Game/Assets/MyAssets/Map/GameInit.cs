@@ -79,6 +79,8 @@ public class GameInit : MonoBehaviour
         selected
     }
 
+    // Health
+    public int endPointStartingHealth;
 
     void Start()
     {

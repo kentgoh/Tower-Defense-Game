@@ -8,7 +8,7 @@ using static GameInit;
 
 public class EnemyActivity : MonoBehaviour
 {
-    public GameObject cameraLocation;
+    private GameObject gameSystem;
 
     // Enemy properties
     public EnemyType enemyType;
@@ -29,13 +29,17 @@ public class EnemyActivity : MonoBehaviour
     private Transform destinatedWayPoint;
     private GameObject wayPointList;
 
+    // Damage deal
+    public int damageDeal;
+
     // Start is called before the first frame update
     void Start()
     {
+        gameSystem = GameObject.FindGameObjectWithTag("GameSystem");
+
         // Initialize waypoint
         destinatedWayPointIndex = 1;
         wayPointList = GameObject.FindGameObjectWithTag("WayPointList");
-        cameraLocation = GameObject.FindGameObjectWithTag("MainCamera");
 
         if (transform.Find("Canvas/HealthBar"))
         {
@@ -72,6 +76,7 @@ public class EnemyActivity : MonoBehaviour
                     maxHealthPoint = 10;
                     healthPoint = 10;
                     speed = 0.2f;
+                    damageDeal = 2;
                     break;
                 }
             case EnemyType.Drone:
@@ -79,6 +84,7 @@ public class EnemyActivity : MonoBehaviour
                     maxHealthPoint = 5;
                     healthPoint = 5;
                     speed = 0.5f;
+                    damageDeal = 1;
                     break;
                 }
             case EnemyType.Boulder:
@@ -86,6 +92,7 @@ public class EnemyActivity : MonoBehaviour
                     maxHealthPoint = 30;
                     healthPoint = 30;
                     speed = 0.1f;
+                    damageDeal = 5;
                     break;
                 }
         }
@@ -125,6 +132,7 @@ public class EnemyActivity : MonoBehaviour
         if (targetTag == "EndPoint")
         {
             StartCoroutine("DestroyEnemy");
+            ReduceEndPointHealth();
         }
 
         if (targetTag == "Bullet")
@@ -138,10 +146,7 @@ public class EnemyActivity : MonoBehaviour
             // Else
             //      Trigger on hit effect
             if (healthPoint == 0)
-            {
-
                 StartCoroutine("DestroyEnemy");
-            }
             else
                 StartCoroutine(onHit());
         }
@@ -180,5 +185,10 @@ public class EnemyActivity : MonoBehaviour
         Destroy(healthBar);
         yield return new WaitForSeconds(1);
         Destroy(gameObject);
+    }
+
+    public void ReduceEndPointHealth()
+    {
+        gameSystem.GetComponent<GameActivity>().endPointHealth -= damageDeal;
     }
 }
