@@ -31,13 +31,6 @@ public class GameInit : MonoBehaviour
     }
     public List<Turret> turrets;
 
-    // Disable plane by index
-    public List<int> turretDisabledPlaneIndex;
-    // Set facing direction by index
-    public List<int> turretInitDirectionRightIndex;
-    public List<int> turretInitDirectionBottomIndex;
-    public List<int> turretInitDirectionLeftIndex;
-
     // Enemy
     public enum EnemyType
     {
@@ -85,35 +78,6 @@ public class GameInit : MonoBehaviour
     void Start()
     {
         CheckDebugMode();
-        InitializeAllPlane();
-    }
-
-    public void InitializeAllPlane()
-    {
-        GameObject[] allPlanes = GameObject.FindGameObjectsWithTag("Plane");
-
-
-        for(int i = 0; i < allPlanes.Length; i++)
-        {
-            // Add index value on top of plane
-            if (debugMode.mode)
-            {
-                allPlanes[i].transform.Find("Index").gameObject.GetComponent<TMP_Text>().text = i.ToString();
-            }
-
-            // Set those plane that has been disabled (the plane is not beside the enemy route/map special setup)
-            if (turretDisabledPlaneIndex.Contains(i))
-                allPlanes[i].GetComponent<PlaneActivity>().turretCreateAvailability = false;
-
-            // Set the initial direction of the turret when created
-            if(turretInitDirectionRightIndex.Contains(i))
-                allPlanes[i].GetComponent<PlaneActivity>().turretInitDiretionCode= 1;
-            if (turretInitDirectionBottomIndex.Contains(i))
-                allPlanes[i].GetComponent<PlaneActivity>().turretInitDiretionCode = 2;
-            if (turretInitDirectionLeftIndex.Contains(i))
-                allPlanes[i].GetComponent<PlaneActivity>().turretInitDiretionCode = 3;
-        }
-
     }
 
     // SetActive() to false for plane index

@@ -22,9 +22,6 @@ public class PlaneActivity : MonoBehaviour
     public Color originalColor;
     public Color hoverColor;
     public Color disabledColor;
-
-    // Top = 0, Left = 1, Bottom = 2, Right = 3
-    public int turretInitDiretionCode = 0;
     public Boolean turretCreateAvailability = true;
 
     // Created turret
@@ -50,15 +47,15 @@ public class PlaneActivity : MonoBehaviour
     public void PlaneMarking(DebugMode debugMode)
     {
         if (!turretCreateAvailability)
-        {
             rend.material.color = disabledColor;
-        }
 
         // Create turret on all plane to determine the direction facing
         if (debugMode.showAllTurret)
         {
-            Vector3 turretPosition = gameObject.transform.position + new Vector3(0, 0, 0);
-            currentTurret = Instantiate(turrets[0].turretPrefab, turretPosition, Quaternion.Euler(new Vector3(0, (turretInitDiretionCode * 90), 0)));
+            if (turretCreateAvailability) { 
+                Vector3 turretPosition = gameObject.transform.position;
+                currentTurret = Instantiate(turrets[0].turretPrefab, turretPosition, gameObject.transform.rotation);
+            }
         }
     }
 
@@ -113,8 +110,8 @@ public class PlaneActivity : MonoBehaviour
                 // Show the turret on top of plane without the turret script
                 if (selectedTurretName.Equals(turret.name))
                 {
-                    Vector3 turretPosition = gameObject.transform.position + new Vector3(0, 0, 0);
-                    tempSelectedTurret = Instantiate(turret.turretPrefab, turretPosition, Quaternion.Euler(new Vector3(0, (turretInitDiretionCode * 90), 0)));
+                    Vector3 turretPosition = gameObject.transform.position ;
+                    tempSelectedTurret = Instantiate(turret.turretPrefab, turretPosition, gameObject.transform.rotation);
                     tempSelectedTurret.GetComponent<TurretActivity>().enabled = false;
                     break;
                 }
@@ -132,7 +129,7 @@ public class PlaneActivity : MonoBehaviour
                 if (selectedTurretName.Equals(turret.name))
                 {
                     Vector3 turretPosition = gameObject.transform.position + new Vector3(0, 0, 0);
-                    currentTurret = Instantiate(turret.turretPrefab, turretPosition, Quaternion.Euler(new Vector3(0, (turretInitDiretionCode * 90), 0)));
+                    currentTurret = Instantiate(turret.turretPrefab, turretPosition, gameObject.transform.rotation);
                     currentTurretName = selectedTurretName;
                     turretCreated = true;
                     turretCreateAvailability = false;
