@@ -34,7 +34,6 @@ public class BulletActivity : MonoBehaviour
         {
             // Make the laser follow and rotate around the turret
             FollowBulletPoint();
-
             StartCoroutine("LaserCountdown", laserExistTime);
         }
         else if (turretName.Equals("TurretC"))
@@ -86,14 +85,12 @@ public class BulletActivity : MonoBehaviour
     }
     IEnumerator LaserCountdown(float countDown)
     {
-        while (Time.timeScale == 1)
+        while (Time.timeScale >= 1)
         {
-            if (countDown == 0)
-            {
-                Destroy(gameObject);
-            }
-            countDown--;
             yield return new WaitForSeconds(1);
+            countDown--;
+            if (countDown == 0)
+                Destroy(gameObject);
         }
     }
 

@@ -103,7 +103,8 @@ public class TimerUIActivity : MonoBehaviour
 
     public void DisplaySpeed()
     {
-        speedControllerText.text = Time.timeScale.ToString("F1");
+        if(Time.timeScale > 0)
+            speedControllerText.text = Time.timeScale.ToString("F1");
     }
 
     public void ChangeTimeScale()
@@ -113,6 +114,8 @@ public class TimerUIActivity : MonoBehaviour
         else if (Time.timeScale == 1.5f)
             Time.timeScale = 2.0f;
         else if (Time.timeScale == 2.0f)
+            Time.timeScale = 5.0f;
+        else if (Time.timeScale == 5.0f)
             Time.timeScale = 1.0f;
     }
 

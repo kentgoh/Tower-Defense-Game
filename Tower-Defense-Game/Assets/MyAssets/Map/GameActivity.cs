@@ -1,16 +1,22 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameActivity : MonoBehaviour
 {
-    private GameObject pauseUI;
-    private GameObject endGameUI;
+    // ActivityUI
+    // Add manually
+    public GameObject pauseGameUI;
+    public GameObject loseGameUI;
+    public GameObject winGameUI;
+    private float tempTimeScale;
 
     // End Point Health
     public int endPointHealth;
 
     // Timer
+    public int totalWave;
     public float time = 0;
     public int currentWave = 1;
     public float timeBeforeNextWave;
@@ -28,8 +34,7 @@ public class GameActivity : MonoBehaviour
     void Start()
     {
         Time.timeScale = 1;
-        InitUI();
-        InitEndPointHealth();
+        InitValueFromGameInitScript();
         StartCoroutine("AddResources");
 
     }
@@ -37,33 +42,23 @@ public class GameActivity : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // End game if endPointHealth = 0
+        // Lose game if endPointHealth = 0
         if(endPointHealth == 0)
-            EndGame();
+            LoseGame();
+
+        // Win game if no enemy left after final wave
+        if(
+            (currentWave == totalWave) 
+            && waveSpawnCompleted 
+            && (GameObject.FindGameObjectsWithTag("Enemy").Length == 0)
+         )
+            WinGame();
 
         // Add time if not paused
         if (Time.timeScale != 0)
         {
             AddTime();
             CountDownTimeForThisWave();
-        }
-
-        // Pause game when space key pressed
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if(Time.timeScale != 0)
-            {
-                Debug.Log("Pause Triggered");
-                Time.timeScale = 0;
-                pauseUI.SetActive(true);
-            }
-            else
-            {
-                Debug.Log("Resume Triggered");
-                Time.timeScale = 1;
-                pauseUI.SetActive(false);
-            }
-
         }
     }
 
@@ -90,31 +85,47 @@ public class GameActivity : MonoBehaviour
         }
     }
 
-    public void InitUI()
+    public void InitValueFromGameInitScript()
     {
-        if (GameObject.Find("Canvas/PauseUI")) { 
-            pauseUI = GameObject.Find("Canvas/PauseUI").gameObject;
-            pauseUI.SetActive(false);
-        }
-        if (GameObject.Find("Canvas/EndGameUI")) { 
-            endGameUI = GameObject.Find("Canvas/EndGameUI").gameObject;
-            endGameUI.SetActive(false);
-        }
+        GameInit gameInitScript = transform.GetComponent<GameInit>();
 
-        if (pauseUI == null || endGameUI == null)
-            Debug.Log("InitUI Failed");
-
+        endPointHealth = gameInitScript.endPointStartingHealth;
+        totalWave = gameInitScript.waves.Count;
     }
 
-    public void InitEndPointHealth()
+    // Activity UI
+    public void PauseGame()
     {
-        endPointHealth = transform.GetComponent<GameInit>().endPointStartingHealth;
+        tempTimeScale = Time.timeScale;
+        Time.timeScale = 0;
+        pauseGameUI.SetActive(true);
     }
 
-    public void EndGame()
+    public void UnpauseGame()
+    {
+        Time.timeScale = tempTimeScale;
+        pauseGameUI.SetActive(false);
+    }
+    public void LoseGame()
     {
         Time.timeScale = 0;
-        endGameUI.SetActive(true);
+        loseGameUI.SetActive(true);
     }
 
+    public void WinGame()
+    {
+        Time.timeScale = 0;
+        winGameUI.SetActive(true);
+    }
+
+    public void RestartGame()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 }

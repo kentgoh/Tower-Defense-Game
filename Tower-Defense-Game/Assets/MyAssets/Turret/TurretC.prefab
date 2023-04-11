@@ -305,7 +305,7 @@ MonoBehaviour:
   animator: {fileID: 0}
   bulletPoint: {fileID: 4059261464750596}
   bullet: {fileID: 1162392375372998, guid: 7a72668d0c5d9c4409f87c932b743fda, type: 3}
-  bulletCooldown: 3
+  bulletCooldown: 5
   currentTarget: {fileID: 0}
   distAway: 0
   bulletCurrentCooldown: 0

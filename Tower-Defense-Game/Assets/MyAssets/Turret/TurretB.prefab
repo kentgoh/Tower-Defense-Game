@@ -251,9 +251,10 @@ MonoBehaviour:
   turretName: TurretB
   rotatedTurretPart: {fileID: 4033343639771536}
   turretYRotationDegreePerSecond: 100
+  animator: {fileID: 0}
   bulletPoint: {fileID: 7408834414374287963}
   bullet: {fileID: 578285593565547822, guid: 3ae5c366594e44b4985bf1472a75c868, type: 3}
-  bulletCooldown: 4
+  bulletCooldown: 6
   currentTarget: {fileID: 0}
   distAway: 0
   bulletCurrentCooldown: 0
