@@ -406,7 +406,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 139706676}
   m_HandleRect: {fileID: 139706675}
   m_Direction: 1
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -4850,6 +4850,7 @@ GameObject:
   - component: {fileID: 1849212809}
   - component: {fileID: 1849212808}
   - component: {fileID: 1849212810}
+  - component: {fileID: 1849212811}
   m_Layer: 0
   m_Name: GameSystem
   m_TagString: GameSystem
@@ -4955,6 +4956,18 @@ MonoBehaviour:
       interval: 10
     intervalBeforeNextWave: 0
   endPointStartingHealth: 10
+--- !u!114 &1849212811
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1849212807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 497a88a647bc037469297fdf4eb54fa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1929402072
 GameObject:
   m_ObjectHideFlags: 0
