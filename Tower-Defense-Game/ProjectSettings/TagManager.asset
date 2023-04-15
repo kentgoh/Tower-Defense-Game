@@ -20,6 +20,9 @@ TagManager:
   - TurretUI
   - TurretUIBorder
   - DebugElement
+  - UnmuteButton
+  - MuteButton
+  - MainSystem
   layers:
   - Default
   - TransparentFX

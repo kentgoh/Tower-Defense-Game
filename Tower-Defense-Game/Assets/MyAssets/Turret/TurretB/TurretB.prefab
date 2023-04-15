@@ -258,6 +258,7 @@ MonoBehaviour:
   currentTarget: {fileID: 0}
   distAway: 0
   bulletCurrentCooldown: 0
+  audioSource: {fileID: 0}
 --- !u!1 &1399252442041522
 GameObject:
   m_ObjectHideFlags: 0

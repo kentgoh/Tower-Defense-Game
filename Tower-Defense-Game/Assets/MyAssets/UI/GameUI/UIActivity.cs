@@ -118,12 +118,17 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
                 if(turretCount > 0) { 
                     gameActivityScript.selectedTurretName = selectedUI.name;
                     gameActivityScript.selectedTurretUI = parentOfSelectedUI;
+                    AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUISelected);
                 }
-                else
+                else {
+                    AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
                     Debug.Log("Turret not available to build");
+                }
             }
-            else
+            else {
+                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
                 Debug.Log("You don't have sufficient coin to build this turret");
+            }
         }
 
     }

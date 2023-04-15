@@ -21,6 +21,7 @@ public class ButtonActivity : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void OnPointerClick(PointerEventData pointerEventData)
     {
         transform.localScale = cachedScale;
+        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.ButtonClick);
     }
 
     public void OnPointerExit(PointerEventData pointerEventData)

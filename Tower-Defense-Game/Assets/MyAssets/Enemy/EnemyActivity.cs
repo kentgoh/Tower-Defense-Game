@@ -131,8 +131,7 @@ public class EnemyActivity : MonoBehaviour
         // Collide with endPoint, removed
         if (targetTag == "EndPoint")
         {
-            StartCoroutine("DestroyEnemy");
-            ReduceEndPointHealth();
+            StartCoroutine("DestroyEnemyAfterHittingEndPoint");
         }
 
         if (targetTag == "Bullet")
@@ -148,11 +147,11 @@ public class EnemyActivity : MonoBehaviour
             if (healthPoint == 0)
                 StartCoroutine("DestroyEnemy");
             else
-                StartCoroutine(onHit());
+                StartCoroutine(OnHit());
         }
     }
 
-    IEnumerator onHit()
+    IEnumerator OnHit()
     {
         foreach(Renderer rend in rends) {
             rend.material.color = onHitColor;
@@ -179,6 +178,7 @@ public class EnemyActivity : MonoBehaviour
 
     public IEnumerator DestroyEnemy()
     {
+        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Explosion);
         if (animator != null)
             animator.SetBool("IsDestroy", true);
 
@@ -187,8 +187,15 @@ public class EnemyActivity : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void ReduceEndPointHealth()
+    public IEnumerator DestroyEnemyAfterHittingEndPoint()
     {
+        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Explosion);
+        if (animator != null)
+            animator.SetBool("IsDestroy", true);
+
+        Destroy(healthBar);
+        yield return new WaitForSeconds(1);
         gameSystem.GetComponent<GameActivity>().endPointHealth -= damageDeal;
+        Destroy(gameObject);
     }
 }

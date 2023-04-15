@@ -21,6 +21,9 @@ public class BulletActivity : MonoBehaviour
     public float laserExistTime;
     public Boolean lockOn;
 
+    // Sound effect
+    public AudioSource audioSource;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,10 +38,20 @@ public class BulletActivity : MonoBehaviour
             // Make the laser follow and rotate around the turret
             FollowBulletPoint();
             StartCoroutine("LaserCountdown", laserExistTime);
+
+            if (transform.GetComponent<AudioSource>())
+            {
+                audioSource = transform.GetComponent<AudioSource>();
+                
+                if(AudioManager.Instance.soundOn)
+                    audioSource.PlayOneShot(audioSource.clip);
+            }
         }
         else if (turretName.Equals("TurretC"))
         {
             lockOn = true;
+            if (transform.GetComponent<AudioSource>())
+                audioSource = transform.GetComponent<AudioSource>();
         }
     }
 
@@ -53,9 +66,7 @@ public class BulletActivity : MonoBehaviour
 
             // Self destruct if the target has already been destroyed
             if (target == null)
-            {
                 Destroy(gameObject);
-            }
         }
         if (turretName.Equals("TurretC") && lockOn)
         {
@@ -89,15 +100,32 @@ public class BulletActivity : MonoBehaviour
         {
             yield return new WaitForSeconds(1);
             countDown--;
-            if (countDown == 0)
+            if (countDown == 0) { 
+                // Stop the soundEffect
+                if(audioSource != null)
+                    audioSource.Stop();
                 Destroy(gameObject);
+            }
         }
     }
 
     IEnumerator Explosion()
     {
-        transform.Find("ExplosionRange").gameObject.SetActive(true);
-        yield return new WaitForSeconds(0.2f);
+        GameObject explosionRange = transform.Find("ExplosionRange").gameObject;
+        explosionRange.SetActive(true);
+
+        if (AudioManager.Instance.soundOn)
+            audioSource.PlayOneShot(audioSource.clip);
+
+        transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+        transform.Find("Bullet").gameObject.SetActive(false);
+        
+        // Deactivate explosionRange after 0.1s
+        yield return new WaitForSeconds(0.1f);
+        explosionRange.SetActive(false);
+
+        // Remove the gameObject of the bullet after 0.9s (Ensure the audio trigger completely)
+        yield return new WaitForSeconds(0.9f);
         Destroy(gameObject);
 
     }

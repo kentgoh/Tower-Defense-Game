@@ -92,10 +92,16 @@ public class PlaneActivity : MonoBehaviour
             {
                 // Turret existed on top of plane
                 if (turretCreated)
+                {
+                    AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
                     Debug.Log("Turret does created on top of plane, kindly remove it first.");
+                }
                 // Plane has been disabled for turret building
                 else
+                {
+                    AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
                     Debug.Log("Turret not able to build on this plane.");
+                }
             }
         }
     }
@@ -147,6 +153,9 @@ public class PlaneActivity : MonoBehaviour
                     int count = int.Parse(selectedTurretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
                     count--;
                     selectedTurretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text = count.ToString();
+
+                    // Play sound effect
+                    AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretBuild);
 
                     break;
                 }

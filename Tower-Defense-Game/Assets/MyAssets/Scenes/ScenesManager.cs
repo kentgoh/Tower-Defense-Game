@@ -27,6 +27,7 @@ public class ScenesManager : MonoBehaviour
     public void ReloadCurrentScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        AudioManager.Instance.StopBGM();
     }
 
     public void LoadNextScene()

@@ -31,32 +31,34 @@ public class GameActivity : MonoBehaviour
     public string selectedTurretName;
     public GameObject selectedTurretUI;
 
-    void Start()
+    void Awake()
     {
         Time.timeScale = 1;
         InitValueFromGameInitScript();
         StartCoroutine("AddResources");
+
+        AudioManager.Instance.PlayBGM();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Lose game if endPointHealth = 0
-        if(endPointHealth == 0)
-            LoseGame();
-
-        // Win game if no enemy left after final wave
-        if(
-            (currentWave == totalWave) 
-            && waveSpawnCompleted 
-            && (GameObject.FindGameObjectsWithTag("Enemy").Length == 0)
-         )
-            WinGame();
-
         // Add time if not paused
         if (Time.timeScale != 0)
         {
+            // Lose game if endPointHealth = 0
+            if (endPointHealth < 0)
+            LoseGame();
+
+            // Win game if no enemy left after final wave
+            if(
+                (currentWave == totalWave) 
+                && waveSpawnCompleted 
+                && (GameObject.FindGameObjectsWithTag("Enemy").Length == 0)
+             )
+                WinGame();
+
             AddTime();
             CountDownTimeForThisWave();
         }
@@ -108,19 +110,20 @@ public class GameActivity : MonoBehaviour
     }
     public void LoseGame()
     {
+        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.LoseGame);
         Time.timeScale = 0;
         loseGameUI.SetActive(true);
     }
 
     public void WinGame()
     {
+        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.WinGame);
         Time.timeScale = 0;
         winGameUI.SetActive(true);
     }
 
     public void RestartGame()
     {
-        Time.timeScale = 1;
         ScenesManager.Instance.ReloadCurrentScene();
     }
 

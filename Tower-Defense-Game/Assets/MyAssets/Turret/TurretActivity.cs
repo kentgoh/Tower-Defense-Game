@@ -18,6 +18,9 @@ public class TurretActivity : MonoBehaviour
     public float distAway;
     public float bulletCurrentCooldown;
 
+    // Sound effect
+    public AudioSource audioSource;
+
     void Start()
     {
         InvokeRepeating("CheckForEnemy",0, 0.5f);
@@ -25,9 +28,9 @@ public class TurretActivity : MonoBehaviour
         bulletCurrentCooldown = 0;
         InvokeRepeating("BulletCooldownCounter", 0, 1.0f);
         if (transform.GetChild(0).GetComponent<Animator>())
-        {
             animator = transform.GetChild(0).GetComponent<Animator>();
-        }
+        if (transform.GetComponent<AudioSource>())
+            audioSource = transform.GetComponent<AudioSource>();
     }
 
     void Update()
@@ -86,8 +89,10 @@ public class TurretActivity : MonoBehaviour
         bulletActivity.target = target;
         bulletActivity.bulletPoint = bulletPoint.gameObject;
         
-        if(animator != null)
+        if (animator != null)
             animator.SetTrigger("Fire");
+        if (audioSource != null && AudioManager.Instance.soundOn)
+            audioSource.PlayOneShot(audioSource.clip);
 
         bulletCurrentCooldown = bulletCooldown;
     }
