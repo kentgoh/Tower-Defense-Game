@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.UI;
-using static GameInit;
+using static GlobalPredefinedModel;
 using Random = UnityEngine.Random;
 
 public class TurretUIActivity : MonoBehaviour
@@ -31,7 +30,7 @@ public class TurretUIActivity : MonoBehaviour
     void Start()
     {
         gameSystem = GameObject.FindGameObjectWithTag("GameSystem");
-        turrets = gameSystem.GetComponent<GameInit>().turrets;
+        turrets = GameInit.Instance.turrets;
 
         // Decoration animation
         if (transform.Find("Decoration/BigGear/Image").gameObject)
@@ -74,7 +73,7 @@ public class TurretUIActivity : MonoBehaviour
             // Get random turretUI
             randomTurretIndex = Random.Range(0, turrets.Count);
 
-            createdNextTurretUI = Instantiate(turrets[randomTurretIndex].turretUI, nextTurretUIParent.transform);
+            createdNextTurretUI = Instantiate(turrets[randomTurretIndex].UI, nextTurretUIParent.transform);
             createdNextTurretUI.transform.SetAsFirstSibling();
             
             // Set the available count and border to not active
@@ -84,14 +83,14 @@ public class TurretUIActivity : MonoBehaviour
                 createdNextTurretUI.transform.Find("Border").gameObject.SetActive(false);
 
             // Start loading the cooldown
-            nextTurretUICooldown = turrets[randomTurretIndex].turretUICooldown;
+            nextTurretUICooldown = turrets[randomTurretIndex].UICooldown;
             nextTurretUILoader.SetActive(true);
         }
         if(nextTurretUICooldown >= 0)
             nextTurretUICooldown -= Time.deltaTime;
 
         // Push the turretUI to available turretUI
-        if (BufferTurretUI(turrets[randomTurretIndex].turretUICooldown, nextTurretUICooldown, nextTurretUILoader))
+        if (BufferTurretUI(turrets[randomTurretIndex].UICooldown, nextTurretUICooldown, nextTurretUILoader))
         {
             AddTurretUICount(createdNextTurretUI);
             Destroy(createdNextTurretUI);
@@ -111,6 +110,7 @@ public class TurretUIActivity : MonoBehaviour
 
     public void AddTurretUICount(GameObject createdNextTurretUI)
     {
+
         string turretNameWithoutClone = createdNextTurretUI.name.Replace("(Clone)", "");
 
         if (availableTurretUIParent.transform.Find(turretNameWithoutClone))
@@ -120,6 +120,12 @@ public class TurretUIActivity : MonoBehaviour
             int count = int.Parse(turretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
             count++;
             turretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text = count.ToString();
+
+            gameSystem.GetComponent<GameActivity>().ga_Turret.turrets.ForEach( 
+                turret => {
+                    if (turret.UI.name.Equals(turretNameWithoutClone))
+                        turret.count = count;
+            });
         }
     }
     
@@ -135,19 +141,19 @@ public class TurretUIActivity : MonoBehaviour
             int turretUIAvailableCount = int.Parse(child.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
 
             // Get resources value from GameActivity script
-            int currentResources = gameActivityScript.resources;
+            int currentResources = gameActivityScript.ga_Resource.resources;
 
             // Get color string from GameInit script
             Color color;
             TurretUIColor turretUIColor = TurretUIColor.notAvailable;
 
-            if((gameActivityScript.selectedTurretName.Length > 0) && child.name.Contains(gameActivityScript.selectedTurretName))
+            if((gameActivityScript.ga_Turret.selectedTurretName.Length > 0) && child.name.Contains(gameActivityScript.ga_Turret.selectedTurretName))
                 turretUIColor = TurretUIColor.selected;
             else if (currentResources >= turretUIResourcesNeeded && turretUIAvailableCount > 0)
                 turretUIColor = TurretUIColor.available;
 
             // Get color by hexastring
-            ColorUtility.TryParseHtmlString(
+            UnityEngine.ColorUtility.TryParseHtmlString(
                 gameInitScript.GetTurretUIColor(turretUIColor),
                 out color
             );

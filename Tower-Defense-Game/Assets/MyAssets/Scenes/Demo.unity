@@ -5749,20 +5749,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e192e42fe780a944ba23b934b38f45c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ga_Wave:
+    totalWave: 0
+    currentWave: 0
+    waveSpawnCompleted: 0
+  ga_Time:
+    time: 0
+    timeBeforeNextWave: 0
+    timeForThisWave: 0
+  ga_Resource:
+    resources: 0
+    resourcesPerSecond: 0
+  ga_Turret:
+    selectedTurretName: 
+    selectedTurretUI: {fileID: 0}
+    turrets: []
   pauseGameUI: {fileID: 633018358}
   loseGameUI: {fileID: 1244812231}
   winGameUI: {fileID: 2067302070}
   endPointHealth: 0
-  totalWave: 0
-  time: 0
-  currentWave: 1
-  timeBeforeNextWave: 0
-  timeForThisWave: 0
-  waveSpawnCompleted: 0
-  resources: 0
-  resourcesPerSecond: 10
-  selectedTurretName: 
-  selectedTurretUI: {fileID: 0}
 --- !u!4 &1849212809
 Transform:
   m_ObjectHideFlags: 0
@@ -5790,29 +5795,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb5107b060837fc45b5510f258ae1b1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode:
-    mode: 0
-    showAllTurret: 0
-  turretDetailsBackground: {fileID: 1497037559}
-  turrets:
-  - name: TurretA
-    turretUICooldown: 2
-    turretResourcesCost: 50
-    turretPrefab: {fileID: 2081243358054770595, guid: b4e2591f1a8f51d4fb320df8d4ac0ce6, type: 3}
-    turretUI: {fileID: 8362751508790020751, guid: 0228f3bdacd0be34c9c9f6489e6c13e3, type: 3}
-    turretDetailsUI: {fileID: 1845482030}
-  - name: TurretB
-    turretUICooldown: 5
-    turretResourcesCost: 100
-    turretPrefab: {fileID: 1370505811353800, guid: cb052f82e83e00846974068e0ffe9dfe, type: 3}
-    turretUI: {fileID: 2349861435503300502, guid: 9590a306eb30a5d47a3907d9a4e45939, type: 3}
-    turretDetailsUI: {fileID: 714819673}
-  - name: TurretC
-    turretUICooldown: 10
-    turretResourcesCost: 200
-    turretPrefab: {fileID: 1791165765685050, guid: 681223e189e1c0746aa56e15fe839178, type: 3}
-    turretUI: {fileID: 5305315069434808695, guid: 674ebcd011e1e9e43952a0eed56f6c96, type: 3}
-    turretDetailsUI: {fileID: 573643285}
   enemies:
   - enemyType: 0
     enemyPrefab: {fileID: 8169414967442259946, guid: d173defa46983214c8b539a14d570e0d, type: 3}
@@ -5834,7 +5816,35 @@ MonoBehaviour:
       count: 10
       interval: 10
     intervalBeforeNextWave: 0
+  debugMode:
+    mode: 0
+    showAllTurret: 0
+  turrets:
+  - name: TurretA
+    resourcesCost: 50
+    count: 0
+    prefab: {fileID: 2081243358054770595, guid: b4e2591f1a8f51d4fb320df8d4ac0ce6, type: 3}
+    UI: {fileID: 8362751508790020751, guid: 0228f3bdacd0be34c9c9f6489e6c13e3, type: 3}
+    UICooldown: 2
+    detailsUI: {fileID: 1845482030}
+  - name: TurretB
+    resourcesCost: 100
+    count: 0
+    prefab: {fileID: 1370505811353800, guid: cb052f82e83e00846974068e0ffe9dfe, type: 3}
+    UI: {fileID: 2349861435503300502, guid: 9590a306eb30a5d47a3907d9a4e45939, type: 3}
+    UICooldown: 5
+    detailsUI: {fileID: 714819673}
+  - name: TurretC
+    resourcesCost: 200
+    count: 0
+    prefab: {fileID: 1791165765685050, guid: 681223e189e1c0746aa56e15fe839178, type: 3}
+    UI: {fileID: 5305315069434808695, guid: 674ebcd011e1e9e43952a0eed56f6c96, type: 3}
+    UICooldown: 10
+    detailsUI: {fileID: 573643285}
+  turretDetailsBackground: {fileID: 1497037559}
   endPointStartingHealth: 10
+  startingResources: 1000
+  resourcesPerSecond: 10
 --- !u!1 &1912110013
 GameObject:
   m_ObjectHideFlags: 0

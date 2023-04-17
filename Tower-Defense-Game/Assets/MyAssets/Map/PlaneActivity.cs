@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-using static GameInit;
+using static GlobalPredefinedModel;
 
 public class PlaneActivity : MonoBehaviour
 {
@@ -54,7 +52,7 @@ public class PlaneActivity : MonoBehaviour
         {
             if (turretCreateAvailability) { 
                 Vector3 turretPosition = gameObject.transform.position;
-                currentTurret = Instantiate(turrets[0].turretPrefab, turretPosition, gameObject.transform.rotation);
+                currentTurret = Instantiate(turrets[0].prefab, turretPosition, gameObject.transform.rotation);
             }
         }
     }
@@ -108,7 +106,7 @@ public class PlaneActivity : MonoBehaviour
 
     public void showSelectedTurret()
     {
-        selectedTurretName = gameSystem.GetComponent<GameActivity>().selectedTurretName;
+        selectedTurretName = gameSystem.GetComponent<GameActivity>().ga_Turret.selectedTurretName;
         if(selectedTurretName != null)
         {
             foreach (Turret turret in turrets)
@@ -117,7 +115,7 @@ public class PlaneActivity : MonoBehaviour
                 if (selectedTurretName.Equals(turret.name))
                 {
                     Vector3 turretPosition = gameObject.transform.position ;
-                    tempSelectedTurret = Instantiate(turret.turretPrefab, turretPosition, gameObject.transform.rotation);
+                    tempSelectedTurret = Instantiate(turret.prefab, turretPosition, gameObject.transform.rotation);
                     tempSelectedTurret.GetComponent<TurretActivity>().enabled = false;
                     break;
                 }
@@ -135,7 +133,7 @@ public class PlaneActivity : MonoBehaviour
                 if (selectedTurretName.Equals(turret.name))
                 {
                     Vector3 turretPosition = gameObject.transform.position + new Vector3(0, 0, 0);
-                    currentTurret = Instantiate(turret.turretPrefab, turretPosition, gameObject.transform.rotation);
+                    currentTurret = Instantiate(turret.prefab, turretPosition, gameObject.transform.rotation);
                     currentTurretName = selectedTurretName;
                     turretCreated = true;
                     turretCreateAvailability = false;
@@ -143,13 +141,13 @@ public class PlaneActivity : MonoBehaviour
 
                     // Reset the selected turret details in gameSystem
                     GameActivity gameActivityScript = gameSystem.GetComponent<GameActivity>();
-                    int turretResourcesCost = turrets.Find(turret => (turret.name == gameActivityScript.selectedTurretName)).turretResourcesCost;
+                    int turretResourcesCost = turrets.Find(turret => (turret.name == gameActivityScript.ga_Turret.selectedTurretName)).resourcesCost;
 
-                    gameActivityScript.selectedTurretName = "";
-                    gameActivityScript.resources -= turretResourcesCost;
+                    gameActivityScript.ga_Turret.selectedTurretName = "";
+                    gameActivityScript.ga_Resource.resources -= turretResourcesCost;
 
                     // Decrease the text count value for the selected turretUI
-                    Transform selectedTurretUI = gameActivityScript.selectedTurretUI.transform;
+                    Transform selectedTurretUI = gameActivityScript.ga_Turret.selectedTurretUI.transform;
                     int count = int.Parse(selectedTurretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
                     count--;
                     selectedTurretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text = count.ToString();

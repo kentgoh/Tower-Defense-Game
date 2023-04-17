@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using static GameInit;
+using static GlobalPredefinedModel;
 
 public class SpawnActivity : MonoBehaviour
 {
@@ -41,8 +39,9 @@ public class SpawnActivity : MonoBehaviour
                 });
                 totalInterval += wave.intervalBeforeNextWave;
 
-                gameSystem.GetComponent<GameActivity>().timeBeforeNextWave = wave.intervalBeforeNextWave;
-                gameSystem.GetComponent<GameActivity>().timeForThisWave = totalInterval;
+                GameActivity gameActivityScript = gameSystem.GetComponent<GameActivity>();
+                gameActivityScript.ga_Time.timeBeforeNextWave = wave.intervalBeforeNextWave;
+                gameActivityScript.ga_Time.timeForThisWave = totalInterval;
 
                 for (int j = 0; j < wave.enemySpawns.Count; j++)
                 {
@@ -53,7 +52,7 @@ public class SpawnActivity : MonoBehaviour
                     yield return new WaitForSeconds(enemySpawn.interval);
                 }
 
-                gameSystem.GetComponent<GameActivity>().waveSpawnCompleted = true;
+                gameActivityScript.ga_Wave.waveSpawnCompleted = true;
 
                 // Delay before next wave spawn
                 yield return new WaitForSeconds(wave.intervalBeforeNextWave);
@@ -61,8 +60,8 @@ public class SpawnActivity : MonoBehaviour
                 currentWaveIndex++;
                 // Stop adding wave count if it is last wave
                 if (currentWaveIndex < totalWave) {
-                    gameSystem.GetComponent<GameActivity>().waveSpawnCompleted = false;
-                    gameSystem.GetComponent<GameActivity>().currentWave = currentWaveIndex + 1;
+                    gameActivityScript.ga_Wave.waveSpawnCompleted = false;
+                    gameActivityScript.ga_Wave.currentWave = currentWaveIndex + 1;
                 }
 
             }

@@ -1,13 +1,9 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
-using static GameInit;
+using static GlobalPredefinedModel;
 
 public class UIActivity : MonoBehaviour, IPointerClickHandler
 {
@@ -76,7 +72,7 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
     // Enable the pointed turret details
     public void enablePointedTurretDetailsUI(Turret turret) {
         turretDetailsUIBackground.SetActive(true);
-        turret.turretDetailsUI.SetActive(true);
+        turret.detailsUI.SetActive(true);
     }
 
     // Disable all the turret details
@@ -86,7 +82,7 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
 
         foreach(Turret turret in turrets)
         {
-            turret.turretDetailsUI.SetActive(false);
+            turret.detailsUI.SetActive(false);
         }
     }
 
@@ -106,18 +102,18 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
         {
             // Get resources value from gameActivityScript
             GameActivity gameActivityScript = gameSystem.GetComponent<GameActivity>();
-            int resources = gameActivityScript.resources;
+            int resources = gameActivityScript.ga_Resource.resources;
             
             // Get turretResourcesCost from gameInitScript
-            int turretResourcesCost = turrets.Find(turret => (turret.name == selectedUI.name)).turretResourcesCost;
+            int turretResourcesCost = turrets.Find(turret => (turret.name == selectedUI.name)).resourcesCost;
             // Get turretCount from the turretUI
             int turretCount = int.Parse(selectedUI.transform.parent.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
 
             if (resources >= turretResourcesCost)
             {
                 if(turretCount > 0) { 
-                    gameActivityScript.selectedTurretName = selectedUI.name;
-                    gameActivityScript.selectedTurretUI = parentOfSelectedUI;
+                    gameActivityScript.ga_Turret.selectedTurretName = selectedUI.name;
+                    gameActivityScript.ga_Turret.selectedTurretUI = parentOfSelectedUI;
                     AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUISelected);
                 }
                 else {

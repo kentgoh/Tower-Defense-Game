@@ -56,14 +56,14 @@ public class TimerUIActivity : MonoBehaviour
 
     public void DisplayTime()
     {
-        timeText.text = Mathf.FloorToInt(gameSystem.GetComponent<GameActivity>().time).ToString();
+        timeText.text = Mathf.FloorToInt(gameSystem.GetComponent<GameActivity>().ga_Time.time).ToString();
     }
 
     public void DisplayWave()
     {
         int maxWave = gameSystem.GetComponent<GameInit>().waves.Count;
-        int currentWave = gameSystem.GetComponent<GameActivity>().currentWave;
-        Boolean waveSpawnCompleted = gameSystem.GetComponent<GameActivity>().waveSpawnCompleted;
+        int currentWave = gameSystem.GetComponent<GameActivity>().ga_Wave.currentWave;
+        Boolean waveSpawnCompleted = gameSystem.GetComponent<GameActivity>().ga_Wave.waveSpawnCompleted;
 
         // Current wave is last wave
         if (maxWave == currentWave)
@@ -89,11 +89,11 @@ public class TimerUIActivity : MonoBehaviour
                 lastWaveUI.SetActive(false);
 
                 // Text display
-                nextWaveTimeText.text = Mathf.CeilToInt(gameSystem.GetComponent<GameActivity>().timeForThisWave).ToString();
+                nextWaveTimeText.text = Mathf.CeilToInt(gameSystem.GetComponent<GameActivity>().ga_Time.timeForThisWave).ToString();
 
                 // Image display
-                float intervalBeforeNextWave = gameSystem.GetComponent<GameActivity>().timeBeforeNextWave;
-                float currentInterval = gameSystem.GetComponent<GameActivity>().timeForThisWave;
+                float intervalBeforeNextWave = gameSystem.GetComponent<GameActivity>().ga_Time.timeBeforeNextWave;
+                float currentInterval = gameSystem.GetComponent<GameActivity>().ga_Time.timeForThisWave;
 
                 float timeRangeClamped = Mathf.InverseLerp(intervalBeforeNextWave, 0, currentInterval);
                 nextWaveTimeDial.fillAmount = Mathf.Lerp(1, 0, timeRangeClamped);

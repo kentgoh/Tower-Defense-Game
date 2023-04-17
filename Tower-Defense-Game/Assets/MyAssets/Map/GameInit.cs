@@ -1,82 +1,28 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
-
+using static GlobalPredefinedModel;
 public class GameInit : MonoBehaviour
 {
-    // Debug Mode
-    [Serializable]
-    public class DebugMode
-    {
-        public Boolean mode = false;
-        public Boolean showAllTurret = false;
-    }
-    public DebugMode debugMode;
-    
-    public GameObject turretDetailsBackground;
-    // Turret
-    [Serializable]
-    public struct Turret
-    {
-        public string name;
-        public int turretUICooldown;
-        public int turretResourcesCost;
-        public GameObject turretPrefab;
-        public GameObject turretUI;
-        public GameObject turretDetailsUI;
-    }
+    public static GameInit Instance;
+
+    public List<Enemy> enemies;
+    public List<Wave> waves;
     public List<Turret> turrets;
 
-    // Enemy
-    public enum EnemyType
-    {
-        Raider,
-        Drone,
-        Boulder
-    }
+    public DebugMode debugMode = new DebugMode(false, false);
 
-    [Serializable]
-    public struct Enemy
-    {
-        public EnemyType enemyType;
-        public GameObject enemyPrefab;
-    }
-    public List<Enemy> enemies;
-
-    // Spawner
-    [Serializable]
-    public struct EnemySpawn
-    {
-        public EnemyType enemyType;
-        public int count;
-        public int interval;
-    }
-
-    [Serializable]
-    public struct Wave
-    {
-        public List<EnemySpawn> enemySpawns;
-        public int intervalBeforeNextWave;
-    }
-    public List<Wave> waves;
-
-    [Serializable]
-    public enum TurretUIColor
-    {
-        notAvailable,
-        available,
-        selected
-    }
-
-    // Health
+    // ========== Set manually =========
+    public GameObject turretDetailsBackground;
     public int endPointStartingHealth;
+    public int startingResources;
+    public int resourcesPerSecond;
 
-    void Start()
+    void Awake()
     {
+        if (!Instance)
+            Instance = this;
+
         CheckDebugMode();
     }
 

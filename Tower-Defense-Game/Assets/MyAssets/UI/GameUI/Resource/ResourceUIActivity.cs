@@ -36,12 +36,12 @@ public class ResourceUIActivity : MonoBehaviour
 
     public void DisplayResources()
     {
-        resourcesTextUI.text = gameSystem.GetComponent<GameActivity>().resources.ToString();
+        resourcesTextUI.text = gameSystem.GetComponent<GameActivity>().ga_Resource.resources.ToString();
     }
 
     public void DisplayResourcesPerSecond()
     {
-        resourcesPerSecondTextUI.text = "+" + gameSystem.GetComponent<GameActivity>().resourcesPerSecond.ToString() + "/s";
+        resourcesPerSecondTextUI.text = "+" + gameSystem.GetComponent<GameActivity>().ga_Resource.resourcesPerSecond.ToString() + "/s";
     }
 
     public void DisplayResourcesImage()

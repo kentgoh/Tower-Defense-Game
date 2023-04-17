@@ -1,42 +1,30 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-
+using static GlobalPredefinedModel;
 
 public class GameActivity : MonoBehaviour
 {
-    // ActivityUI
+    public GA_Wave ga_Wave;
+    public GA_Time ga_Time;
+    public GA_Resource ga_Resource;
+    public GA_Turret ga_Turret;
+
+    // end Point Health
+    public int endPointHealth;
+    // time scale before pause
+    private float tempTimeScale;
+
     // Add manually
     public GameObject pauseGameUI;
     public GameObject loseGameUI;
     public GameObject winGameUI;
-    private float tempTimeScale;
-
-    // End Point Health
-    public int endPointHealth;
-
-    // Timer
-    public int totalWave;
-    public float time = 0;
-    public int currentWave = 1;
-    public float timeBeforeNextWave;
-    public float timeForThisWave;
-    public Boolean waveSpawnCompleted = false;
-
-    // Resources
-    public int resources = 0;
-    public int resourcesPerSecond = 0;
-
-    // Turret
-    public string selectedTurretName;
-    public GameObject selectedTurretUI;
 
     void Awake()
     {
-        Time.timeScale = 1;
-        InitValueFromGameInitScript();
+        InitParameters();
         StartCoroutine("AddResources");
-
         AudioManager.Instance.PlayBGM();
 
     }
@@ -49,12 +37,12 @@ public class GameActivity : MonoBehaviour
         {
             // Lose game if endPointHealth = 0
             if (endPointHealth < 0)
-            LoseGame();
+                LoseGame();
 
             // Win game if no enemy left after final wave
             if(
-                (currentWave == totalWave) 
-                && waveSpawnCompleted 
+                (ga_Wave.currentWave == ga_Wave.totalWave) 
+                && ga_Wave.waveSpawnCompleted
                 && (GameObject.FindGameObjectsWithTag("Enemy").Length == 0)
              )
                 WinGame();
@@ -66,13 +54,13 @@ public class GameActivity : MonoBehaviour
 
     public void AddTime()
     {
-        time += Time.deltaTime;
+        ga_Time.time += Time.deltaTime;
     }
 
     public void CountDownTimeForThisWave()
     {
-        if(timeForThisWave > 0)
-            timeForThisWave -= Time.deltaTime;
+        if(ga_Time.timeForThisWave > 0)
+            ga_Time.timeForThisWave -= Time.deltaTime;
     }
 
     public IEnumerator AddResources()
@@ -82,17 +70,23 @@ public class GameActivity : MonoBehaviour
             if (Time.timeScale != 0)
             {
                 yield return new WaitForSeconds(1);
-                resources += resourcesPerSecond;
+                ga_Resource.resources += ga_Resource.resourcesPerSecond;
             }
         }
     }
 
-    public void InitValueFromGameInitScript()
+    public void InitParameters()
     {
-        GameInit gameInitScript = transform.GetComponent<GameInit>();
+        Time.timeScale = 1;
 
+        // Initialize some parameter through value in gameInitScript
+        GameInit gameInitScript = transform.GetComponent<GameInit>();       
         endPointHealth = gameInitScript.endPointStartingHealth;
-        totalWave = gameInitScript.waves.Count;
+        ga_Wave = new GA_Wave(gameInitScript.waves.Count, false);
+        ga_Time = new GA_Time();
+        ga_Resource = new GA_Resource(gameInitScript.startingResources, gameInitScript.resourcesPerSecond);
+        ga_Turret = new GA_Turret(gameInitScript.turrets);
+
     }
 
     // Activity UI
