@@ -5,18 +5,12 @@ using static GlobalPredefinedModel;
 
 public class SpawnActivity : MonoBehaviour
 {
-    // All details from gameSystem
-    private GameObject gameSystem;
-    private List<Enemy> enemies;
     private List<Wave> waves;
     private int totalWave;
     private int currentWaveIndex;
-
     void Start()
     {
-        gameSystem = GameObject.FindGameObjectWithTag("GameSystem");
-        enemies = gameSystem.GetComponent<GameInit>().enemies;
-        waves = gameSystem.GetComponent<GameInit>().waves;
+        waves = GameInit.Instance.waves;
         totalWave = waves.Count;
         currentWaveIndex = 0;
 
@@ -39,9 +33,7 @@ public class SpawnActivity : MonoBehaviour
                 });
                 totalInterval += wave.intervalBeforeNextWave;
 
-                GameActivity gameActivityScript = gameSystem.GetComponent<GameActivity>();
-                gameActivityScript.ga_Time.timeBeforeNextWave = wave.intervalBeforeNextWave;
-                gameActivityScript.ga_Time.timeForThisWave = totalInterval;
+                GameActivity.Instance.UpdateTimeValueRelatedToWave(wave.intervalBeforeNextWave, totalInterval);
 
                 for (int j = 0; j < wave.enemySpawns.Count; j++)
                 {
@@ -52,16 +44,15 @@ public class SpawnActivity : MonoBehaviour
                     yield return new WaitForSeconds(enemySpawn.interval);
                 }
 
-                gameActivityScript.ga_Wave.waveSpawnCompleted = true;
+                GameActivity.Instance.WaveSpawnCompleted();
 
                 // Delay before next wave spawn
                 yield return new WaitForSeconds(wave.intervalBeforeNextWave);
 
                 currentWaveIndex++;
-                // Stop adding wave count if it is last wave
+                // Add wave count if it is not last wave
                 if (currentWaveIndex < totalWave) {
-                    gameActivityScript.ga_Wave.waveSpawnCompleted = false;
-                    gameActivityScript.ga_Wave.currentWave = currentWaveIndex + 1;
+                    GameActivity.Instance.StartNewWaveSpawn();
                 }
 
             }
@@ -76,7 +67,7 @@ public class SpawnActivity : MonoBehaviour
         while(enemyCount > 0) {
             if (Time.timeScale != 0)
             {
-                Enemy enemy = enemies.Find(x => x.enemyType.Equals(enemySpawn.enemyType));
+                Enemy enemy = GameInit.Instance.enemies.Find(x => x.enemyType.Equals(enemySpawn.enemyType));
                 if (enemy.enemyPrefab != null) {
                     Instantiate(enemy.enemyPrefab, gameObject.transform.position, Quaternion.identity);
                     enemyCount--;

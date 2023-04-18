@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class ResourceUIActivity : MonoBehaviour
 {
-    private GameObject gameSystem;
     private TMP_Text resourcesTextUI;
     private TMP_Text resourcesPerSecondTextUI;
     private Image resourcesImageUI;
@@ -16,8 +15,6 @@ public class ResourceUIActivity : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameSystem = GameObject.FindGameObjectWithTag("GameSystem");
-
         if (transform.Find("Count"))
             resourcesTextUI = transform.Find("Count").GetComponent<TMP_Text>();
         if (transform.Find("PerSecond"))
@@ -36,12 +33,12 @@ public class ResourceUIActivity : MonoBehaviour
 
     public void DisplayResources()
     {
-        resourcesTextUI.text = gameSystem.GetComponent<GameActivity>().ga_Resource.resources.ToString();
+        resourcesTextUI.text = GameActivity.Instance.ga_Resource.resources.ToString();
     }
 
     public void DisplayResourcesPerSecond()
     {
-        resourcesPerSecondTextUI.text = "+" + gameSystem.GetComponent<GameActivity>().ga_Resource.resourcesPerSecond.ToString() + "/s";
+        resourcesPerSecondTextUI.text = "+" + GameActivity.Instance.ga_Resource.resourcesPerSecond.ToString() + "/s";
     }
 
     public void DisplayResourcesImage()

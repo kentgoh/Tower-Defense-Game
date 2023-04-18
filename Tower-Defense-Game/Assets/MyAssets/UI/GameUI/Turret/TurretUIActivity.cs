@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 
 public class TurretUIActivity : MonoBehaviour
 {
-    private GameObject gameSystem;
     private List<Turret> turrets;
 
     // Decoration
@@ -29,8 +28,7 @@ public class TurretUIActivity : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameSystem = GameObject.FindGameObjectWithTag("GameSystem");
-        turrets = GameInit.Instance.turrets;
+        turrets = GameActivity.Instance.ga_Turret.turrets;
 
         // Decoration animation
         if (transform.Find("Decoration/BigGear/Image").gameObject)
@@ -43,6 +41,7 @@ public class TurretUIActivity : MonoBehaviour
             nextTurretUIParent = transform.Find("NextTurret/Turret").gameObject;
         if (transform.Find("AvailableTurret/Turrets").gameObject)
             availableTurretUIParent = transform.Find("AvailableTurret/Turrets").gameObject;
+
         if (transform.Find("NextTurret/Turret/TurretUILoader").gameObject) { 
             nextTurretUILoader = transform.Find("NextTurret/Turret/TurretUILoader").gameObject;
 
@@ -58,7 +57,7 @@ public class TurretUIActivity : MonoBehaviour
         {
             DecorationRotation();
             GenerateNewTurretUI();
-            UpdateTurretUIAvailability();
+            UpdateTurretUIAvailabilityAndCount();
         }
     }
 
@@ -97,7 +96,7 @@ public class TurretUIActivity : MonoBehaviour
         }
 
     }
-    public Boolean BufferTurretUI(int maxTurretUICooldown, float currentTurretUICooldown, GameObject turretUILoader)
+    public bool BufferTurretUI(int maxTurretUICooldown, float currentTurretUICooldown, GameObject turretUILoader)
     {
         // Update the loader image
         float imageFillRange = Mathf.InverseLerp(0, maxTurretUICooldown, currentTurretUICooldown);
@@ -110,54 +109,49 @@ public class TurretUIActivity : MonoBehaviour
 
     public void AddTurretUICount(GameObject createdNextTurretUI)
     {
+        // TurretAUI (Clone) -> TurretAUI
+        string turretUINameWithoutClone = createdNextTurretUI.name.Replace("(Clone)", "");
 
-        string turretNameWithoutClone = createdNextTurretUI.name.Replace("(Clone)", "");
+        if (availableTurretUIParent.transform.Find(turretUINameWithoutClone))
+            GameActivity.Instance.AddTurretCountByUIName(turretUINameWithoutClone);
 
-        if (availableTurretUIParent.transform.Find(turretNameWithoutClone))
-        {
-            // Increase the text count value for the selected turretUI
-            Transform turretUI = availableTurretUIParent.transform.Find(turretNameWithoutClone);
-            int count = int.Parse(turretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
-            count++;
-            turretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text = count.ToString();
-
-            gameSystem.GetComponent<GameActivity>().ga_Turret.turrets.ForEach( 
-                turret => {
-                    if (turret.UI.name.Equals(turretNameWithoutClone))
-                        turret.count = count;
-            });
-        }
     }
     
-    public void UpdateTurretUIAvailability()
+    public void UpdateTurretUIAvailabilityAndCount()
     {
-        GameInit gameInitScript = gameSystem.GetComponent<GameInit>();
-        GameActivity gameActivityScript = gameSystem.GetComponent<GameActivity>();
+        GameActivity gameActivityScript = GameActivity.Instance;
 
         foreach (Transform child in availableTurretUIParent.transform)
         {
             // Get resourcesNeeded and count value from turretUI
-            int turretUIResourcesNeeded = int.Parse(child.Find("ResourcesNeeded").GetComponent<TMP_Text>().text);
-            int turretUIAvailableCount = int.Parse(child.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
+            string turretNameWithoutUI = child.name.Replace("UI", "");
+            Turret turret = turrets.Find((turret) => (turret.name.Equals(turretNameWithoutUI)));
 
-            // Get resources value from GameActivity script
-            int currentResources = gameActivityScript.ga_Resource.resources;
+            if(turret != null) {
+                // Get resources value from GameActivity script
+                int currentResources = gameActivityScript.ga_Resource.resources;
 
-            // Get color string from GameInit script
-            Color color;
-            TurretUIColor turretUIColor = TurretUIColor.notAvailable;
+                // Get color string from GameInit script
+                Color color;
+                TurretUIColor turretUIColor = TurretUIColor.notAvailable;
 
-            if((gameActivityScript.ga_Turret.selectedTurretName.Length > 0) && child.name.Contains(gameActivityScript.ga_Turret.selectedTurretName))
-                turretUIColor = TurretUIColor.selected;
-            else if (currentResources >= turretUIResourcesNeeded && turretUIAvailableCount > 0)
-                turretUIColor = TurretUIColor.available;
+                if (gameActivityScript.ga_Turret.selectedTurret != null && child.name.Contains(gameActivityScript.ga_Turret.selectedTurret.name))
+                    turretUIColor = TurretUIColor.selected;
+                else if (currentResources >= turret.resourcesCost && turret.count > 0)
+                    turretUIColor = TurretUIColor.available;
 
-            // Get color by hexastring
-            UnityEngine.ColorUtility.TryParseHtmlString(
-                gameInitScript.GetTurretUIColor(turretUIColor),
-                out color
-            );
-            child.Find("Border").GetComponent<Image>().color = color;
+                // Get color by hexastring
+                ColorUtility.TryParseHtmlString(
+                    GameInit.Instance.GetTurretUIColor(turretUIColor),
+                    out color
+                );
+                child.Find("Border").GetComponent<Image>().color = color;
+                child.Find("AvailableCount/Count").GetComponent<TMP_Text>().text = turret.count.ToString();
+            }
+            else
+            {
+                Debug.Log("Can't find turret from TurretUI with name: " + turretNameWithoutUI);
+            }
         }
     }
 }

@@ -5760,14 +5760,10 @@ MonoBehaviour:
   ga_Resource:
     resources: 0
     resourcesPerSecond: 0
-  ga_Turret:
-    selectedTurretName: 
-    selectedTurretUI: {fileID: 0}
-    turrets: []
+  endPointHealth: 0
   pauseGameUI: {fileID: 633018358}
   loseGameUI: {fileID: 1244812231}
   winGameUI: {fileID: 2067302070}
-  endPointHealth: 0
 --- !u!4 &1849212809
 Transform:
   m_ObjectHideFlags: 0
@@ -5816,9 +5812,6 @@ MonoBehaviour:
       count: 10
       interval: 10
     intervalBeforeNextWave: 0
-  debugMode:
-    mode: 0
-    showAllTurret: 0
   turrets:
   - name: TurretA
     resourcesCost: 50
@@ -5841,9 +5834,12 @@ MonoBehaviour:
     UI: {fileID: 5305315069434808695, guid: 674ebcd011e1e9e43952a0eed56f6c96, type: 3}
     UICooldown: 10
     detailsUI: {fileID: 573643285}
+  debugMode:
+    mode: 0
+    showAllTurret: 0
   turretDetailsBackground: {fileID: 1497037559}
   endPointStartingHealth: 10
-  startingResources: 1000
+  startingResources: 0
   resourcesPerSecond: 10
 --- !u!1 &1912110013
 GameObject:

@@ -1,9 +1,26 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static GlobalPredefinedModel;
 
 public static class GlobalPredefinedModel
 {
+    // ==================== class ====================
+    [Serializable]
+    public class Turret
+    {
+        public string name;
+        public int resourcesCost;
+        public int count;
+
+        public GameObject prefab;
+
+        public GameObject UI;
+        public int UICooldown;
+
+        public GameObject detailsUI;
+    }
+
     // ==================== enum ====================
     public enum TurretUIColor
     {
@@ -31,21 +48,6 @@ public static class GlobalPredefinedModel
             this.mode = mode;
             this.showAllTurret= showAllTurret;
         }
-    }
-
-    [Serializable]
-    public struct Turret
-    {
-        public string name;
-        public int resourcesCost;
-        public int count;
-
-        public GameObject prefab;
-
-        public GameObject UI;
-        public int UICooldown;
-
-        public GameObject detailsUI;
     }
 
     [Serializable]
@@ -106,17 +108,17 @@ public static class GlobalPredefinedModel
         }
     }
 
-    [Serializable]
+    // Not serializable because selectedTurret and selectedTurretUI might be null
     public struct GA_Turret
     {
-        public string selectedTurretName;
-        public GameObject selectedTurretUI;
         public List<Turret> turrets;
+        public Turret selectedTurret;
+        public GameObject selectedTurretUI;
 
         public GA_Turret(List<Turret> turrets)
         {
-            this.selectedTurretName = "";
-            this.selectedTurretUI = null;
+            selectedTurret = null;
+            selectedTurretUI = null;
             this.turrets = turrets;
         }
     }

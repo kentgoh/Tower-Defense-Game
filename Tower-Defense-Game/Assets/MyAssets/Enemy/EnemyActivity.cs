@@ -6,8 +6,6 @@ using static GlobalPredefinedModel;
 
 public class EnemyActivity : MonoBehaviour
 {
-    private GameObject gameSystem;
-
     // Enemy properties
     public EnemyType enemyType;
     private Animator animator;
@@ -33,8 +31,6 @@ public class EnemyActivity : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        gameSystem = GameObject.FindGameObjectWithTag("GameSystem");
-
         // Initialize waypoint
         destinatedWayPointIndex = 1;
         wayPointList = GameObject.FindGameObjectWithTag("WayPointList");
@@ -193,7 +189,7 @@ public class EnemyActivity : MonoBehaviour
 
         Destroy(healthBar);
         yield return new WaitForSeconds(1);
-        gameSystem.GetComponent<GameActivity>().endPointHealth -= damageDeal;
+        GameActivity.Instance.DecreaseEndpointHealth(damageDeal);
         Destroy(gameObject);
     }
 }

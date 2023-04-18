@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static GlobalPredefinedModel;
+
 public class GameInit : MonoBehaviour
 {
     public static GameInit Instance;

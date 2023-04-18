@@ -8,16 +8,11 @@ using static GlobalPredefinedModel;
 public class UIActivity : MonoBehaviour, IPointerClickHandler
 {
     private GameObject turretDetailsUIBackground;
-    private List<Turret> turrets;
-    private string selectedTurretName;
-    private GameObject gameSystem;
 
     // Start is called before the first frame update
     void Start()
     {
-        gameSystem = GameObject.FindGameObjectWithTag("GameSystem");
-        turrets = gameSystem.GetComponent<GameInit>().turrets;
-        turretDetailsUIBackground = gameSystem.GetComponent<GameInit>().turretDetailsBackground;
+        turretDetailsUIBackground = GameInit.Instance.turretDetailsBackground;
     }
 
     // Update is called once per frame
@@ -45,7 +40,7 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
             Boolean nameMatched = false;
             foreach (RaycastResult result in results)
             {
-                foreach(Turret turret in turrets)
+                foreach(Turret turret in GameInit.Instance.turrets)
                 {
                     // disable all UI first, then enable the selected one only
                     if (result.gameObject.name.Equals(turret.name))
@@ -80,7 +75,7 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
     {
         turretDetailsUIBackground.SetActive(false);
 
-        foreach(Turret turret in turrets)
+        foreach(Turret turret in GameInit.Instance.turrets)
         {
             turret.detailsUI.SetActive(false);
         }
@@ -91,29 +86,27 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
         GameObject selectedUI = eventData.pointerCurrentRaycast.gameObject;
 
         // Check selected turret UI
-        displayTurretUISelection(selectedUI);
+        DisplayTurretUISelection(selectedUI);
     }
 
-    public void displayTurretUISelection(GameObject selectedUI)
+    public void DisplayTurretUISelection(GameObject selectedUI)
     {
         GameObject parentOfSelectedUI = selectedUI.transform.parent.gameObject;
 
         if (selectedUI.tag.Equals("TurretUI"))
         {
             // Get resources value from gameActivityScript
-            GameActivity gameActivityScript = gameSystem.GetComponent<GameActivity>();
-            int resources = gameActivityScript.ga_Resource.resources;
+            int resources = GameActivity.Instance.ga_Resource.resources;
             
             // Get turretResourcesCost from gameInitScript
-            int turretResourcesCost = turrets.Find(turret => (turret.name == selectedUI.name)).resourcesCost;
+            int turretResourcesCost = GameInit.Instance.turrets.Find(turret => (turret.name == selectedUI.name)).resourcesCost;
             // Get turretCount from the turretUI
             int turretCount = int.Parse(selectedUI.transform.parent.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
 
             if (resources >= turretResourcesCost)
             {
-                if(turretCount > 0) { 
-                    gameActivityScript.ga_Turret.selectedTurretName = selectedUI.name;
-                    gameActivityScript.ga_Turret.selectedTurretUI = parentOfSelectedUI;
+                if(turretCount > 0) {
+                    GameActivity.Instance.SetSelectedTurretByTurretName(selectedUI.name, parentOfSelectedUI);
                     AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUISelected);
                 }
                 else {

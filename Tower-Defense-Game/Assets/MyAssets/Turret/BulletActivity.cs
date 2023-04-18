@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.Animations;
 
@@ -70,10 +68,12 @@ public class BulletActivity : MonoBehaviour
         }
         if (turretName.Equals("TurretC") && lockOn)
         {
-            Vector3 Vo = CalculateCatapult(target.transform.position, transform.position, 1);
+            if(target != null) { 
+                Vector3 Vo = CalculateCatapult(target.transform.position, transform.position, 1);
 
-            transform.GetComponent<Rigidbody>().velocity = Vo;
-            lockOn = false;
+                transform.GetComponent<Rigidbody>().velocity = Vo;
+                lockOn = false;
+            }
         }
 
 

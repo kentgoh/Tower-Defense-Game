@@ -6,13 +6,6 @@ using static GlobalPredefinedModel;
 
 public class PlaneActivity : MonoBehaviour
 {
-    // All details from gameSystem
-    private List<Turret> turrets;
-    private GameObject gameSystem;
-
-    // All details from UI
-    // Display selected turret before creation
-    public string selectedTurretName = null;
     public GameObject tempSelectedTurret;
 
     // Plane details
@@ -33,9 +26,7 @@ public class PlaneActivity : MonoBehaviour
     {
         rend = gameObject.GetComponentInChildren<Renderer>();
 
-        gameSystem = GameObject.FindGameObjectWithTag("GameSystem");
-        turrets = gameSystem.GetComponent<GameInit>().turrets;
-        PlaneMarking(gameSystem.GetComponent<GameInit>().debugMode);
+        PlaneMarking(GameInit.Instance.debugMode);
     }
 
     // Update is called once per frame
@@ -52,7 +43,7 @@ public class PlaneActivity : MonoBehaviour
         {
             if (turretCreateAvailability) { 
                 Vector3 turretPosition = gameObject.transform.position;
-                currentTurret = Instantiate(turrets[0].prefab, turretPosition, gameObject.transform.rotation);
+                currentTurret = Instantiate(GameInit.Instance.turrets[0].prefab, turretPosition, gameObject.transform.rotation);
             }
         }
     }
@@ -84,7 +75,7 @@ public class PlaneActivity : MonoBehaviour
             if (turretCreateAvailability)
             {
                 Destroy(tempSelectedTurret);
-                createSelectedTurret();
+                CreateSelectedTurret();
             }
             else
             {
@@ -106,58 +97,35 @@ public class PlaneActivity : MonoBehaviour
 
     public void showSelectedTurret()
     {
-        selectedTurretName = gameSystem.GetComponent<GameActivity>().ga_Turret.selectedTurretName;
-        if(selectedTurretName != null)
-        {
-            foreach (Turret turret in turrets)
-            {
-                // Show the turret on top of plane without the turret script
-                if (selectedTurretName.Equals(turret.name))
-                {
-                    Vector3 turretPosition = gameObject.transform.position ;
-                    tempSelectedTurret = Instantiate(turret.prefab, turretPosition, gameObject.transform.rotation);
-                    tempSelectedTurret.GetComponent<TurretActivity>().enabled = false;
-                    break;
-                }
-            }
+        Turret turret = GameActivity.Instance.ga_Turret.selectedTurret;
+        if(turret != null)
+        {   
+            Vector3 turretPosition = gameObject.transform.position ;
+            tempSelectedTurret = Instantiate(turret.prefab, turretPosition, gameObject.transform.rotation);
+            tempSelectedTurret.GetComponent<TurretActivity>().enabled = false;
+
         }
     }
 
-    public void createSelectedTurret()
+    public void CreateSelectedTurret()
     {
-        if (selectedTurretName != null && turretCreateAvailability)
+        Turret turret = GameActivity.Instance.ga_Turret.selectedTurret;
+        if (turret != null)
         {
-            foreach (Turret turret in turrets)
-            {
-                // Create the selected turret on top of plane
-                if (selectedTurretName.Equals(turret.name))
-                {
-                    Vector3 turretPosition = gameObject.transform.position + new Vector3(0, 0, 0);
-                    currentTurret = Instantiate(turret.prefab, turretPosition, gameObject.transform.rotation);
-                    currentTurretName = selectedTurretName;
-                    turretCreated = true;
-                    turretCreateAvailability = false;
-                    rend.material.color = disabledColor;
+            Vector3 turretPosition = gameObject.transform.position + new Vector3(0, 0, 0);
+            currentTurret = Instantiate(turret.prefab, turretPosition, gameObject.transform.rotation);
+            turretCreated = true;
+            turretCreateAvailability = false;
+            rend.material.color = disabledColor;
 
-                    // Reset the selected turret details in gameSystem
-                    GameActivity gameActivityScript = gameSystem.GetComponent<GameActivity>();
-                    int turretResourcesCost = turrets.Find(turret => (turret.name == gameActivityScript.ga_Turret.selectedTurretName)).resourcesCost;
+            GameActivity.Instance.ResetSelectedTurretAfterCreated();
+            AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretBuild);
 
-                    gameActivityScript.ga_Turret.selectedTurretName = "";
-                    gameActivityScript.ga_Resource.resources -= turretResourcesCost;
-
-                    // Decrease the text count value for the selected turretUI
-                    Transform selectedTurretUI = gameActivityScript.ga_Turret.selectedTurretUI.transform;
-                    int count = int.Parse(selectedTurretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text);
-                    count--;
-                    selectedTurretUI.Find("AvailableCount/Count").GetComponent<TMP_Text>().text = count.ToString();
-
-                    // Play sound effect
-                    AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretBuild);
-
-                    break;
-                }
-            }
+        }
+        else
+        {
+            AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
+            Debug.Log("No turret has been selected");
         }
     }
 }
