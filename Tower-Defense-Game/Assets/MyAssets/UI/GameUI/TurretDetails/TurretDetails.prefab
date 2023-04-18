@@ -1754,7 +1754,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: A turret that deal damage over time. The laser will maintain for 3 seconds
+  m_text: A turret that deal damage every second. The laser will maintain for 3 seconds
     before go into cooldown.
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

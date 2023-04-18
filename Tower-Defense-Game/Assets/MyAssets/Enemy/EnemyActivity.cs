@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using static GlobalPredefinedModel;
@@ -28,6 +29,9 @@ public class EnemyActivity : MonoBehaviour
     // Damage deal
     public int damageDeal;
 
+    // Collider
+    public List<DPSBulletCollider> DPSBulletColliders;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,7 +58,6 @@ public class EnemyActivity : MonoBehaviour
         DisplayHealthPoint();
         AutoMove();
     }
-
     
     public void initEnemyProperties()
     {
@@ -122,26 +125,40 @@ public class EnemyActivity : MonoBehaviour
     {
         var targetTag = collider.transform.tag;
 
-        // Collide with endPoint, removed
+        // Collide with endPoint
         if (targetTag == "EndPoint")
-        {
             StartCoroutine("DestroyEnemyAfterHittingEndPoint");
-        }
 
+        // Collide with bullet
         if (targetTag == "Bullet")
-        {
-            if (!isDamaged)
-                isDamaged = true;
+            DealDamageOnEnemyByBulletType(collider);
+    }
 
-            healthPoint--;
-            // If no health point left
-            //      Destroy object
-            // Else
-            //      Trigger on hit effect
-            if (healthPoint == 0)
-                StartCoroutine("DestroyEnemy");
-            else
-                StartCoroutine(OnHit());
+    private void OnTriggerStay(Collider collider)
+    {
+        foreach (DPSBulletCollider c in DPSBulletColliders)
+        {
+            if (c.collider == collider)
+            {
+                c.collidedTime += Time.deltaTime;
+
+                if(c.collidedTime >= 1)
+                    DealDPSDamageOnEnemy(c);
+                break;
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider collider)
+    {
+        // Remove the bullet from collider list when it no more collide with current enemy
+        foreach(DPSBulletCollider c in DPSBulletColliders)
+        {
+            if (c.collider == collider)
+            {
+                DPSBulletColliders.Remove(c);
+                break;
+            }
         }
     }
 
@@ -191,5 +208,56 @@ public class EnemyActivity : MonoBehaviour
         yield return new WaitForSeconds(1);
         GameActivity.Instance.DecreaseEndpointHealth(damageDeal);
         Destroy(gameObject);
+    }
+
+    public void DealDamageOnEnemyByBulletType(Collider collider)
+    {
+        // Get BulletActivity script to deal required damage on enemy
+        if (collider.GetComponentInParent<BulletActivity>() != null) {
+            BulletActivity bulletActivityScript = collider.GetComponentInParent<BulletActivity>();
+            int damageDealByBullet = bulletActivityScript.bulletDamage;
+            BulletDamageType type = bulletActivityScript.bulletDamageType;
+
+            if (type != BulletDamageType.DPS)
+            {
+                // Single target bullet need to confirm the target of the bullet is current enemy
+                if (type == BulletDamageType.SingleTarget)
+                {
+                    if (bulletActivityScript.target == gameObject)
+                        DealDamageOnEnemy(damageDealByBullet);
+                }
+                else
+                    DealDamageOnEnemy(damageDealByBullet);
+
+            }
+            else {
+                DPSBulletCollider temp = new DPSBulletCollider(collider, 0, damageDealByBullet);
+                DPSBulletColliders.Add(temp);
+                DealDPSDamageOnEnemy(temp);
+            }
+
+
+        }
+    }
+
+    public void DealDamageOnEnemy(int damage)
+    {
+        // Display healthbar for damaged 
+        if (!isDamaged)
+            isDamaged = true;
+
+        healthPoint -= damage;
+
+        if (healthPoint <= 0)
+            StartCoroutine("DestroyEnemy");
+        else
+            StartCoroutine(OnHit());
+    }
+
+    public void DealDPSDamageOnEnemy(DPSBulletCollider c)
+    {
+        DealDamageOnEnemy(c.damage);
+        // Reset the collided time
+        c.collidedTime = 0;
     }
 }

@@ -2,11 +2,17 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.Animations;
+using static GlobalPredefinedModel;
 
 public class BulletActivity : MonoBehaviour
 {
+    // Auto set during game
     public GameObject target;
     public string turretName;
+
+    // Set manually
+    public BulletDamageType bulletDamageType;
+    public int bulletDamage;
 
     [Header("Turret = (A,C)")]
     public int speed;
@@ -82,7 +88,7 @@ public class BulletActivity : MonoBehaviour
     {
         if(collider.transform.tag == "Enemy")
         {
-            if(turretName.Equals("TurretA"))
+            if(turretName.Equals("TurretA") && collider.gameObject == target)
                 Destroy(gameObject);
         }
         if(collider.transform.tag == "Base")
@@ -119,7 +125,8 @@ public class BulletActivity : MonoBehaviour
 
         transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
         transform.Find("Bullet").gameObject.SetActive(false);
-        
+        transform.Find("Eff_Spark00").gameObject.SetActive(false);
+
         // Deactivate explosionRange after 0.1s
         yield return new WaitForSeconds(0.1f);
         explosionRange.SetActive(false);

@@ -21,6 +21,21 @@ public static class GlobalPredefinedModel
         public GameObject detailsUI;
     }
 
+    [Serializable]
+    public class DPSBulletCollider
+    {
+        public Collider collider;
+        public float collidedTime;
+        public int damage;
+
+        public DPSBulletCollider(Collider collider, float collidedTime, int damage)
+        {
+            this.collider = collider;
+            this.collidedTime = collidedTime;
+            this.damage = damage;
+        }
+    }
+
     // ==================== enum ====================
     public enum TurretUIColor
     {
@@ -34,6 +49,13 @@ public static class GlobalPredefinedModel
         Raider,
         Drone,
         Boulder
+    }
+
+    public enum BulletDamageType
+    {
+        SingleTarget,
+        Explosion,
+        DPS
     }
 
     // ==================== struct ====================

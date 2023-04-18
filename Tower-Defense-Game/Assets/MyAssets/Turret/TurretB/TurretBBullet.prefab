@@ -49,6 +49,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   turretName: 
+  bulletDamageType: 2
+  bulletDamage: 1
   speed: 0
   bulletPoint: {fileID: 0}
   laserExistTime: 3

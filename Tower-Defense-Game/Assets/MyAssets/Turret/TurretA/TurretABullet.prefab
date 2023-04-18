@@ -48,10 +48,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   turretName: 
+  bulletDamageType: 0
+  bulletDamage: 1
   speed: 2
   bulletPoint: {fileID: 0}
   laserExistTime: 0
   lockOn: 0
+  audioSource: {fileID: 0}
 --- !u!136 &8299260857210438879
 CapsuleCollider:
   m_ObjectHideFlags: 0
