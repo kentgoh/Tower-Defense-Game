@@ -43,7 +43,7 @@ public class PlaneActivity : MonoBehaviour
         {
             if (turretCreateAvailability) { 
                 Vector3 turretPosition = gameObject.transform.position;
-                currentTurret = Instantiate(GameInit.Instance.turrets[0].prefab, turretPosition, gameObject.transform.rotation);
+                currentTurret = Instantiate(GameActivity.Instance.ga_Turret.turrets[0].prefab, turretPosition, gameObject.transform.rotation);
             }
         }
     }
@@ -83,13 +83,13 @@ public class PlaneActivity : MonoBehaviour
                 if (turretCreated)
                 {
                     AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
-                    Debug.Log("Turret does created on top of plane, kindly remove it first.");
+                    GameUIActivity.Instance.CoroutineDisplayDialog("Turret does created on top of plane, kindly remove it first.");
                 }
                 // Plane has been disabled for turret building
                 else
                 {
                     AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
-                    Debug.Log("Turret not able to build on this plane.");
+                    GameUIActivity.Instance.CoroutineDisplayDialog("Turret not able to build on this plane.");
                 }
             }
         }

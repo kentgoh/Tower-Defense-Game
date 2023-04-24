@@ -416,7 +416,6 @@ GameObject:
   - component: {fileID: 1153571375606783108}
   - component: {fileID: 1153571375606783129}
   - component: {fileID: 1153571375606783130}
-  - component: {fileID: 1153571375606783131}
   m_Layer: 5
   m_Name: DialogBox
   m_TagString: Untagged
@@ -485,26 +484,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1153571375606783131
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153571375606783109}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: 1200
-  m_PreferredHeight: 800
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &1153571375690411022
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,7 +630,6 @@ GameObject:
   - component: {fileID: 1153571375875124385}
   - component: {fileID: 1153571375875124390}
   - component: {fileID: 1153571375875124391}
-  - component: {fileID: 1153571375875124384}
   m_Layer: 5
   m_Name: WinGameUI
   m_TagString: Untagged
@@ -718,26 +696,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1153571375875124384
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1153571375875124386}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: 40
-  m_FlexibleHeight: 1000
-  m_LayoutPriority: 1
 --- !u!1 &1153571375889221320
 GameObject:
   m_ObjectHideFlags: 0

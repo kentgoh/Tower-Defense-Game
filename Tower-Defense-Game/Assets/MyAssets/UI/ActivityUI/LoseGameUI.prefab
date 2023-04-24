@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 1669503941000440452}
   - component: {fileID: 1669503941000440451}
   - component: {fileID: 1669503941000440450}
-  - component: {fileID: 1669503941000440453}
   m_Layer: 5
   m_Name: LoseGameUI
   m_TagString: Untagged
@@ -78,26 +77,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1669503941000440453
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1669503941000440455}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: 40
-  m_FlexibleHeight: 1000
-  m_LayoutPriority: 1
 --- !u!1 &1669503941001724141
 GameObject:
   m_ObjectHideFlags: 0
@@ -244,7 +223,6 @@ GameObject:
   - component: {fileID: 1669503941268970145}
   - component: {fileID: 1669503941268970172}
   - component: {fileID: 1669503941268970175}
-  - component: {fileID: 1669503941268970174}
   m_Layer: 5
   m_Name: DialogBox
   m_TagString: Untagged
@@ -313,26 +291,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1669503941268970174
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1669503941268970144}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: 1200
-  m_PreferredHeight: 800
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
 --- !u!1 &1669503941353646635
 GameObject:
   m_ObjectHideFlags: 0

@@ -14,7 +14,6 @@ public class GameInit : MonoBehaviour
     public DebugMode debugMode = new DebugMode(false, false);
 
     // ========== Set manually =========
-    public GameObject turretDetailsBackground;
     public int endPointStartingHealth;
     public int startingResources;
     public int resourcesPerSecond;

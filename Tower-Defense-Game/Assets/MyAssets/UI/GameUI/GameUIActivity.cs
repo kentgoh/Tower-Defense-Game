@@ -1,18 +1,22 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static GlobalPredefinedModel;
 
-public class UIActivity : MonoBehaviour, IPointerClickHandler
+public class GameUIActivity : MonoBehaviour, IPointerClickHandler
 {
-    private GameObject turretDetailsUIBackground;
+    public static GameUIActivity Instance;
+    public GameObject turretDetailsUI;
+    public GameObject dialogUI;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        turretDetailsUIBackground = GameInit.Instance.turretDetailsBackground;
+        if (!Instance)
+            Instance = this;
+
     }
 
     // Update is called once per frame
@@ -26,13 +30,13 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
         List<RaycastResult> results = new List<RaycastResult>();
         EventSystem.current.RaycastAll(eventData, results);
 
-        displayTurretDetailsUI(results);
+        DisplayTurretDetailsUI(results);
        
     }
 
     // ======================= MOUSE ACTIVITY ======================= 
     // Mouse hover activity
-    public void displayTurretDetailsUI(List<RaycastResult> results)
+    public void DisplayTurretDetailsUI(List<RaycastResult> results)
     {
         // Mouse pointer does point to more than one gameObject
         if (results.Count > 0)
@@ -45,8 +49,8 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
                     // disable all UI first, then enable the selected one only
                     if (result.gameObject.name.Equals(turret.name))
                     {
-                        disableAllTurretDetailsUI();
-                        enablePointedTurretDetailsUI(turret);
+                        DisableAllTurretDetailsUI();
+                        EnablePointedTurretDetailsUI(turret);
                         nameMatched = true;
                         break;
                     }
@@ -54,26 +58,26 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
                 // Mouse pointer does point to more than one gameObject but no turretDetails matched
                 if (!nameMatched)
                 {
-                    disableAllTurretDetailsUI();
+                    DisableAllTurretDetailsUI();
                 }
             }
         }
         else
         {
-            disableAllTurretDetailsUI();
+            DisableAllTurretDetailsUI();
         }
     }
 
     // Enable the pointed turret details
-    public void enablePointedTurretDetailsUI(Turret turret) {
-        turretDetailsUIBackground.SetActive(true);
+    public void EnablePointedTurretDetailsUI(Turret turret) {
+        turretDetailsUI.SetActive(true);
         turret.detailsUI.SetActive(true);
     }
 
     // Disable all the turret details
-    public void disableAllTurretDetailsUI()
+    public void DisableAllTurretDetailsUI()
     {
-        turretDetailsUIBackground.SetActive(false);
+        turretDetailsUI.SetActive(false);
 
         foreach(Turret turret in GameInit.Instance.turrets)
         {
@@ -111,14 +115,28 @@ public class UIActivity : MonoBehaviour, IPointerClickHandler
                 }
                 else {
                     AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
-                    Debug.Log("Turret not available to build");
+                    CoroutineDisplayDialog("Turret not available to build.");
                 }
             }
             else {
                 AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
-                Debug.Log("You don't have sufficient coin to build this turret");
+                CoroutineDisplayDialog("You don't have sufficient coin to build this turret.");
             }
         }
 
+    }
+
+    public void CoroutineDisplayDialog(string message)
+    {
+        StartCoroutine(DisplayDialog(message));
+    }
+
+    public IEnumerator DisplayDialog(string message)
+    {
+        dialogUI.GetComponent<TMP_Text>().text = message;
+
+        yield return new WaitForSecondsRealtime(1.5f);
+
+        dialogUI.GetComponent<TMP_Text>().text = "";
     }
 }

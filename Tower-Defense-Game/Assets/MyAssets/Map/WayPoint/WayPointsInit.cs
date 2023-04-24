@@ -4,7 +4,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class WayPointsInitialization : MonoBehaviour
+public class WayPointsInit: MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()
