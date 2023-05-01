@@ -19,9 +19,9 @@ public class EnemyActivity : MonoBehaviour
     private Renderer[] rends;
     private Color originalColor;
     private Color onHitColor;
-
-    // Enemy movement 
     public float speed;
+
+    // WayPoint for enemy movement
     public int destinatedWayPointIndex;
     private Transform destinatedWayPoint;
     private GameObject wayPointList;
@@ -33,23 +33,18 @@ public class EnemyActivity : MonoBehaviour
     public List<DPSBulletCollider> DPSBulletColliders;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        // Initialize waypoint
-        destinatedWayPointIndex = 1;
-        wayPointList = GameObject.FindGameObjectWithTag("WayPointList");
-
         if (transform.Find("Canvas/HealthBar"))
         {
             healthBar = transform.Find("Canvas/HealthBar").gameObject;
             GameObject healthBarFill = healthBar.transform.Find("Fill").gameObject;
         }
-
         if (gameObject.GetComponent<Animator>())
             animator = gameObject.GetComponent<Animator>();
 
-        // Initialize enemy properties by type
-        initEnemyProperties();
+        InitWayPoint();
+        InitEnemyProperties();
     }
 
     // Update is called once per frame
@@ -59,7 +54,17 @@ public class EnemyActivity : MonoBehaviour
         AutoMove();
     }
     
-    public void initEnemyProperties()
+    public void InitWayPoint()
+    {
+        // Get all available wayPoints
+        wayPointList = GameObject.FindGameObjectWithTag("WayPointList");
+
+        // The index of the destinatedWayPoint will always start with 1
+        destinatedWayPointIndex = 1;
+        destinatedWayPoint = wayPointList.transform.Find(destinatedWayPointIndex.ToString());
+    }
+
+    public void InitEnemyProperties()
     {
         rends = gameObject.GetComponentsInChildren<Renderer>();
         originalColor = rends[0].material.color;
@@ -98,26 +103,31 @@ public class EnemyActivity : MonoBehaviour
 
     public void AutoMove()
     {
-        // Get destinated wayPoint
-        WayPointValue[] wayPointValueScriptList = wayPointList.GetComponentsInChildren<WayPointValue>();
-        foreach(WayPointValue wayPointValueScript in wayPointValueScriptList)
-        {
-            if(wayPointValueScript.currentWayPoint == destinatedWayPointIndex)
-            {
-                destinatedWayPoint = wayPointValueScript.GetComponentInParent<Transform>();
-                break;
-            }
-        }
-
+        // Determine the distance between enemy and destinatedWayPoint
         Vector3 dir = destinatedWayPoint.position - transform.position;
-        if (Vector3.Distance(transform.position, destinatedWayPoint.position) <= 0.01f)
+        Vector3 posAfterTranslate = transform.position + (dir.normalized * speed * Time.deltaTime);
+
+        if (Vector3.Distance(posAfterTranslate, destinatedWayPoint.position) > (speed * Time.deltaTime))
         {
-            destinatedWayPointIndex = destinatedWayPoint.gameObject.GetComponent<WayPointValue>().destinatedWayPoint;
+            // The enemy won't exceed the wayPoint position after translate, move normally
+            transform.Translate(dir.normalized * speed * Time.deltaTime);
+            transform.Find("Model").LookAt(destinatedWayPoint.position);
+        }
+        else {
+            // Move the enemy to destinatedWayPoint position
+            transform.position = destinatedWayPoint.position; 
+            
+            // Change to nextWayPoint
+            WayPointValue wayPointValueScript = destinatedWayPoint.GetComponent<WayPointValue>();
+
+            // It is possible there is more than one next wayPoint
+            int randomIndexValue = UnityEngine.Random.Range(0, wayPointValueScript.nextWayPoint.Count);
+            destinatedWayPointIndex = wayPointValueScript.nextWayPoint[randomIndexValue];
+            destinatedWayPoint = wayPointList.transform.Find(destinatedWayPointIndex.ToString());
+
+            transform.Find("Model").LookAt(destinatedWayPoint.position);
         }
 
-        // Move object to wayPoint
-        transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);
-        transform.Find("Model").LookAt(destinatedWayPoint.position);
 
     }
 
