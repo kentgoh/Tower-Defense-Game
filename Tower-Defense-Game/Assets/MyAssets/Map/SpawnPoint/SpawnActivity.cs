@@ -5,9 +5,13 @@ using static GlobalPredefinedModel;
 
 public class SpawnActivity : MonoBehaviour
 {
+    public GameObject spawningEffect;
+    public GameObject spawningStopEffect;
+
     private List<Wave> waves;
     private int totalWave;
     private int currentWaveIndex;
+    
     void Start()
     {
         waves = GameInit.Instance.waves;
@@ -15,6 +19,11 @@ public class SpawnActivity : MonoBehaviour
         currentWaveIndex = 0;
 
         StartCoroutine(EnemySpawn());
+    }
+
+    private void Update()
+    {
+        SpawnPointEffectChange();
     }
 
     public IEnumerator EnemySpawn()
@@ -78,4 +87,27 @@ public class SpawnActivity : MonoBehaviour
         }
     }
 
+    public void SpawnPointEffectChange()
+    {
+        GA_Wave wave = GameActivity.Instance.ga_Wave;
+
+        // All wave spawned, no more portal effect
+        if (wave.waveSpawnCompleted && wave.currentWave == wave.totalWave)
+        {
+            spawningStopEffect.SetActive(false);
+            spawningEffect.SetActive(false);
+        }
+        // Current wave spawn completed, waiting for next wave
+        else if (GameActivity.Instance.ga_Wave.waveSpawnCompleted)
+        {
+            spawningStopEffect.SetActive(true);
+            spawningEffect.SetActive(false);
+        }
+        // Spawning
+        else
+        {
+            spawningEffect.SetActive(true);
+            spawningStopEffect.SetActive(false);
+        }
+    }
 }

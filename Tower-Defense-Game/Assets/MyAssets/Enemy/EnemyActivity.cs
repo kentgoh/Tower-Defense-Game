@@ -11,6 +11,7 @@ public class EnemyActivity : MonoBehaviour
     public EnemyType enemyType;
     private Animator animator;
 
+    public float speed;
     public int maxHealthPoint;
     public int healthPoint;
     private GameObject healthBar;
@@ -19,7 +20,7 @@ public class EnemyActivity : MonoBehaviour
     private Renderer[] rends;
     private Color originalColor;
     private Color onHitColor;
-    public float speed;
+    public GameObject explosionEffect;
 
     // WayPoint for enemy movement
     public int destinatedWayPointIndex;
@@ -202,9 +203,12 @@ public class EnemyActivity : MonoBehaviour
         AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Explosion);
         if (animator != null)
             animator.SetBool("IsDestroy", true);
+        if (explosionEffect != null) 
+            explosionEffect.SetActive(true);
 
         Destroy(healthBar);
         yield return new WaitForSeconds(1);
+
         Destroy(gameObject);
     }
 
@@ -213,6 +217,8 @@ public class EnemyActivity : MonoBehaviour
         AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Explosion);
         if (animator != null)
             animator.SetBool("IsDestroy", true);
+        if (explosionEffect != null)
+            explosionEffect.SetActive(true);
 
         Destroy(healthBar);
         yield return new WaitForSeconds(1);
