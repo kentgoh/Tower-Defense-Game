@@ -12,11 +12,18 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
     public GameObject turretDetailsUI;
     public GameObject dialogUI;
 
+    // Camera moving related
+    public bool mouseReleasedOnCameraMoveButton = true;
+    int directionIndex = 0;
+
+    private new Camera camera;
+
     void Awake()
     {
         if (!Instance)
             Instance = this;
 
+        camera = Camera.main;
     }
 
     // Update is called once per frame
@@ -31,7 +38,9 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
         EventSystem.current.RaycastAll(eventData, results);
 
         DisplayTurretDetailsUI(results);
-       
+        ZoomCamera();
+        MoveCamera();
+
     }
 
     // ======================= MOUSE ACTIVITY ======================= 
@@ -44,7 +53,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
             Boolean nameMatched = false;
             foreach (RaycastResult result in results)
             {
-                foreach(Turret turret in GameInit.Instance.turrets)
+                foreach (Turret turret in GameInit.Instance.turrets)
                 {
                     // disable all UI first, then enable the selected one only
                     if (result.gameObject.name.Equals(turret.name))
@@ -79,7 +88,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
     {
         turretDetailsUI.SetActive(false);
 
-        foreach(Turret turret in GameInit.Instance.turrets)
+        foreach (Turret turret in GameInit.Instance.turrets)
         {
             turret.detailsUI.SetActive(false);
         }
@@ -101,7 +110,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
         {
             // Get resources value from gameActivityScript
             int resources = GameActivity.Instance.ga_Resource.resources;
-            
+
             // Get turretResourcesCost from gameInitScript
             int turretResourcesCost = GameInit.Instance.turrets.Find(turret => (turret.name == selectedUI.name)).resourcesCost;
             // Get turretCount from the turretUI
@@ -109,7 +118,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
 
             if (resources >= turretResourcesCost)
             {
-                if(turretCount > 0) {
+                if (turretCount > 0) {
                     GameActivity.Instance.SetSelectedTurretByTurretName(selectedUI.name, parentOfSelectedUI);
                     AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUISelected);
                 }
@@ -139,4 +148,69 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
 
         dialogUI.GetComponent<TMP_Text>().text = "";
     }
+
+    // ==================== Camera moving related ====================
+    public void ZoomCamera()
+    {
+        float zoomSpeed = 10.0f;
+
+        if (camera != null)
+        {
+            float temp = camera.fieldOfView;
+            temp += (Input.GetAxis("Mouse ScrollWheel") * zoomSpeed) * (-1);
+
+            // FOV 10~70
+            if (temp >= 10 && temp <= 70)
+                camera.fieldOfView = temp;
+        }
+
+    }
+
+    public void MoveCamera()
+    {
+        float cameraMoveSpeed = 2.0f;
+
+        if (!mouseReleasedOnCameraMoveButton)
+        {
+            if (directionIndex == (int)Direction.Up)
+            {
+                if (camera.transform.position.z <= -1)
+                    camera.transform.Translate(new Vector3(0, 0, cameraMoveSpeed * Time.fixedDeltaTime), Space.World);
+            }
+            else if (directionIndex == (int)Direction.Down)
+            {
+                if (camera.transform.position.z >= -11)
+                    camera.transform.Translate(new Vector3(0, 0, cameraMoveSpeed * (-1) * Time.fixedDeltaTime), Space.World);
+            }
+            else if (directionIndex == (int)Direction.Right)
+            {
+                if (camera.transform.position.x <= 5)
+                    camera.transform.Translate(new Vector3(cameraMoveSpeed * Time.fixedDeltaTime, 0, 0), Space.World);
+            }
+            else if (directionIndex == (int)Direction.Left)
+            {
+                if (camera.transform.position.x >= -5)
+                    camera.transform.Translate(new Vector3(cameraMoveSpeed * (-1) * Time.fixedDeltaTime, 0, 0), Space.World);
+            }
+        }
+    }
+
+    public void StartMoveCamera(int i)
+    {
+        directionIndex= i;
+        mouseReleasedOnCameraMoveButton = false;
+    }
+
+    public void EndMoveCamera()
+    {
+        mouseReleasedOnCameraMoveButton = true;
+    }
+
+    public void InitCameraPosition()
+    {
+        camera.transform.position = new Vector3(0, 12, -5);
+        camera.fieldOfView = 70;
+    }
+    
+
 }

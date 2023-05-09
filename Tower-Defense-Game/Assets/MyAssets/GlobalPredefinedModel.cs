@@ -58,6 +58,14 @@ public static class GlobalPredefinedModel
         DPS
     }
 
+    public enum Direction
+    {
+        Up,
+        Right,
+        Down,
+        Left
+    }
+
     // ==================== struct ====================
     [Serializable]
     public struct DebugMode
