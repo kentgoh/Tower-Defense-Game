@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static GlobalPredefinedModel;
 
 public static class GlobalPredefinedModel
 {
@@ -66,6 +65,12 @@ public static class GlobalPredefinedModel
         Left
     }
 
+    public enum SpellType
+    {
+        Ice,
+        Lightning
+    }
+
     // ==================== struct ====================
     [Serializable]
     public struct DebugMode
@@ -100,6 +105,25 @@ public static class GlobalPredefinedModel
     {
         public List<EnemySpawn> enemySpawns;
         public int intervalBeforeNextWave;
+    }
+
+    [Serializable]
+    public struct Spell
+    {
+        public SpellType spellType;
+        public float maxCooldown;
+        public float currentCooldown;
+        public float resourcesCost;
+        public Sprite spellUI;
+
+        public Spell(SpellType spellType, float maxCooldown, float resourcesCost, Sprite spellUI)
+        {
+            this.spellType = spellType;
+            this.maxCooldown = maxCooldown;
+            this.currentCooldown = maxCooldown;
+            this.resourcesCost = resourcesCost;
+            this.spellUI = spellUI;
+        }
     }
 
     [Serializable]
@@ -150,6 +174,31 @@ public static class GlobalPredefinedModel
             selectedTurret = null;
             selectedTurretUI = null;
             this.turrets = turrets;
+        }
+    }
+
+    [Serializable]
+    public struct GA_Spell
+    {
+        public List<Spell> spells;
+
+        public GA_Spell(List<SpellType> availableSpellTypes, List<Spell> allSpellsData)
+        {
+            spells = new List<Spell>();
+
+            // Add available spell to ga_spell according to the data in allSpellsData
+            foreach(SpellType spellType in availableSpellTypes)
+            {
+                spells.Add(
+                    new Spell(
+                        spellType,
+                        allSpellsData[(int) spellType].maxCooldown,
+                        allSpellsData[(int) spellType].resourcesCost,
+                        allSpellsData[(int) spellType].spellUI
+                    )
+                );
+
+            }
         }
     }
 }

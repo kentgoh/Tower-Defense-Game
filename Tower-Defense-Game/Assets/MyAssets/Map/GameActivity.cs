@@ -1,7 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using static GlobalPredefinedModel;
 
@@ -13,6 +10,7 @@ public class GameActivity : MonoBehaviour
     public GA_Time ga_Time;
     public GA_Resource ga_Resource;
     public GA_Turret ga_Turret;
+    public GA_Spell ga_Spell;
 
     // end Point Health
     public int endPointHealth;
@@ -92,6 +90,7 @@ public class GameActivity : MonoBehaviour
         ga_Time = new GA_Time();
         ga_Resource = new GA_Resource(gameInitScript.startingResources, gameInitScript.resourcesPerSecond);
         ga_Turret = new GA_Turret(gameInitScript.turrets);
+        ga_Spell = new GA_Spell(gameInitScript.startingSpellTypes, gameInitScript.spells);
 
     }
 

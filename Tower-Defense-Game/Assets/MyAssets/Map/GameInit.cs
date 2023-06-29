@@ -10,6 +10,7 @@ public class GameInit : MonoBehaviour
     public List<Enemy> enemies;
     public List<Wave> waves;
     public List<Turret> turrets;
+    public List<Spell> spells;     
 
     public DebugMode debugMode = new DebugMode(false, false);
 
@@ -17,6 +18,8 @@ public class GameInit : MonoBehaviour
     public int endPointStartingHealth;
     public int startingResources;
     public int resourcesPerSecond;
+
+    public List<SpellType> startingSpellTypes;
 
     void Awake()
     {
