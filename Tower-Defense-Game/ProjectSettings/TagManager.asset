@@ -23,6 +23,7 @@ TagManager:
   - UnmuteButton
   - MuteButton
   - MainSystem
+  - Spell
   layers:
   - Default
   - TransparentFX

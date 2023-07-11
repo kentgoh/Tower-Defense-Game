@@ -57,11 +57,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
-  m_Name: Starjedi SDF
+  m_Name: Starjedi SDF 2
   m_EditorClassIdentifier: 
-  hashCode: -690035705
+  hashCode: 170392981
   material: {fileID: 852933509415005344}
-  materialHashCode: 1500183623
+  materialHashCode: 1930466837
   m_Version: 1.1.0
   m_SourceFontFileGUID: 2ca0528de1216c241ba0e56b0973b63b
   m_SourceFontFile_EditorRef: {fileID: 12800000, guid: 2ca0528de1216c241ba0e56b0973b63b, type: 3}
@@ -435,6 +435,21 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
+  - m_Index: 37
+    m_Metrics:
+      m_Width: 55.015625
+      m_Height: 63.453125
+      m_HorizontalBearingX: 2.640625
+      m_HorizontalBearingY: 63.453125
+      m_HorizontalAdvance: 57.65625
+    m_GlyphRect:
+      m_X: 283
+      m_Y: 259
+      m_Width: 56
+      m_Height: 64
+    m_Scale: 1
+    m_AtlasIndex: 0
+    m_ClassDefinitionType: 0
   - m_Index: 40
     m_Metrics:
       m_Width: 58
@@ -705,21 +720,6 @@ MonoBehaviour:
     m_Scale: 1
     m_AtlasIndex: 0
     m_ClassDefinitionType: 0
-  - m_Index: 37
-    m_Metrics:
-      m_Width: 55.015625
-      m_Height: 63.453125
-      m_HorizontalBearingX: 2.640625
-      m_HorizontalBearingY: 63.453125
-      m_HorizontalAdvance: 57.65625
-    m_GlyphRect:
-      m_X: 283
-      m_Y: 259
-      m_Width: 56
-      m_Height: 64
-    m_Scale: 1
-    m_AtlasIndex: 0
-    m_ClassDefinitionType: 0
   m_CharacterTable:
   - m_ElementType: 1
     m_Unicode: 32
@@ -854,6 +854,10 @@ MonoBehaviour:
     m_GlyphIndex: 36
     m_Scale: 1
   - m_ElementType: 1
+    m_Unicode: 108
+    m_GlyphIndex: 37
+    m_Scale: 1
+  - m_ElementType: 1
     m_Unicode: 109
     m_GlyphIndex: 46
     m_Scale: 1
@@ -884,10 +888,6 @@ MonoBehaviour:
   - m_ElementType: 1
     m_Unicode: 122
     m_GlyphIndex: 40
-    m_Scale: 1
-  - m_ElementType: 1
-    m_Unicode: 108
-    m_GlyphIndex: 37
     m_Scale: 1
   m_AtlasTextures:
   - {fileID: -8326765746571461769}
@@ -1330,7 +1330,7 @@ Material:
     - _OutlineSoftness: 0
     - _OutlineUVSpeedX: 0
     - _OutlineUVSpeedY: 0
-    - _OutlineWidth: 0.2
+    - _OutlineWidth: 0.5
     - _PerspectiveFilter: 0.875
     - _Reflectivity: 10
     - _ScaleRatioA: 0.9
