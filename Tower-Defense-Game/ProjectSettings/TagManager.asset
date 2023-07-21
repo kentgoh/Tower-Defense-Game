@@ -24,6 +24,7 @@ TagManager:
   - MuteButton
   - MainSystem
   - Spell
+  - SpellUI
   layers:
   - Default
   - TransparentFX
@@ -31,7 +32,7 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Map
   - 
   - 
   - 

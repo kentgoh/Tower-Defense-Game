@@ -47,7 +47,7 @@ public class GameInit : MonoBehaviour
         if (turretUIColor == TurretUIColor.available)
             return "#19870F";
         else if (turretUIColor == TurretUIColor.selected)
-            return "#00FF22";
+            return "#FE7000";
         else
             return "#8C0A0A";
 

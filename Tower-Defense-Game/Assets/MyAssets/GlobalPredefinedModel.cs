@@ -35,6 +35,25 @@ public static class GlobalPredefinedModel
         }
     }
 
+    [Serializable]
+    public class Spell
+    {
+        public SpellType spellType;
+        public float maxCooldown;
+        public float currentCooldown;
+        public float resourcesCost;
+        public Sprite spellUI;
+
+        public Spell(SpellType spellType, float maxCooldown, float resourcesCost, Sprite spellUI)
+        {
+            this.spellType = spellType;
+            this.maxCooldown = maxCooldown;
+            this.currentCooldown = 0;
+            this.resourcesCost = resourcesCost;
+            this.spellUI = spellUI;
+        }
+    }
+
     // ==================== enum ====================
     public enum TurretUIColor
     {
@@ -108,25 +127,6 @@ public static class GlobalPredefinedModel
     }
 
     [Serializable]
-    public struct Spell
-    {
-        public SpellType spellType;
-        public float maxCooldown;
-        public float currentCooldown;
-        public float resourcesCost;
-        public Sprite spellUI;
-
-        public Spell(SpellType spellType, float maxCooldown, float resourcesCost, Sprite spellUI)
-        {
-            this.spellType = spellType;
-            this.maxCooldown = maxCooldown;
-            this.currentCooldown = maxCooldown;
-            this.resourcesCost = resourcesCost;
-            this.spellUI = spellUI;
-        }
-    }
-
-    [Serializable]
     public struct GA_Wave
     {
         public int totalWave;
@@ -181,10 +181,12 @@ public static class GlobalPredefinedModel
     public struct GA_Spell
     {
         public List<Spell> spells;
+        public Spell selectedSpell;
 
         public GA_Spell(List<SpellType> availableSpellTypes, List<Spell> allSpellsData)
         {
             spells = new List<Spell>();
+            selectedSpell = null;
 
             // Add available spell to ga_spell according to the data in allSpellsData
             foreach(SpellType spellType in availableSpellTypes)

@@ -109,7 +109,12 @@ public class GameActivity : MonoBehaviour
 
     }
 
-    public void ResetSelectedTurretAfterCreated()
+    public void ResetSelectedTurret()
+    {
+        ga_Turret.selectedTurret = null;
+    }
+
+        public void ResetSelectedTurretAfterCreated()
     {
         int count = 0;
         ga_Resource.resources -= ga_Turret.selectedTurret.resourcesCost;
@@ -128,6 +133,11 @@ public class GameActivity : MonoBehaviour
         // Unselect turret if count less than 1 or insufficient resources
         if(count < 1 || (ga_Resource.resources < ga_Turret.selectedTurret.resourcesCost))
             ga_Turret.selectedTurret = null;
+    }
+
+    public void ResetSelectedSpell()
+    {
+        ga_Spell.selectedSpell = null;
     }
 
     public void UpdateTimeValueRelatedToWave(float timeBeforeNextWave, float timeRemainingForThisWave)

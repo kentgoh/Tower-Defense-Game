@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 9037482280604717188}
   - component: {fileID: 6224578174328252353}
   - component: {fileID: 8573445198517821465}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: PlaneInner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,7 +111,7 @@ GameObject:
   - component: {fileID: 8860375396342714296}
   - component: {fileID: 1570921146856271719}
   - component: {fileID: 3072314428090919569}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Plane
   m_Icon: {fileID: 0}
@@ -147,12 +147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa6c3bf17380dab45b0fa9bb1dd045e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedTurretName: 
   tempSelectedTurret: {fileID: 0}
   originalColor: {r: 1, g: 1, b: 1, a: 1}
   hoverColor: {r: 0.92640406, g: 1, b: 0.107547104, a: 0}
   disabledColor: {r: 1, g: 0, b: 0, a: 0}
-  turretInitDiretionCode: 0
   turretCreateAvailability: 1
 --- !u!65 &3072314428090919569
 BoxCollider:
@@ -178,7 +176,7 @@ GameObject:
   - component: {fileID: 1367468736859007665}
   - component: {fileID: 1021183806920625299}
   - component: {fileID: 5626986139030573573}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Arrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -255,7 +253,7 @@ GameObject:
   - component: {fileID: 885425874770924306}
   - component: {fileID: 6800449501670400658}
   - component: {fileID: 6724546860263918214}
-  m_Layer: 5
+  m_Layer: 6
   m_Name: Canvas
   m_TagString: DebugElement
   m_Icon: {fileID: 0}
