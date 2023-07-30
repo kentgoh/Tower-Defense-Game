@@ -21,15 +21,17 @@ public static class GlobalPredefinedModel
     }
 
     [Serializable]
-    public class DPSBulletCollider
+    public class DPSCollider
     {
         public Collider collider;
+        public string name;
         public float collidedTime;
         public int damage;
 
-        public DPSBulletCollider(Collider collider, float collidedTime, int damage)
+        public DPSCollider(Collider collider, float collidedTime, int damage)
         {
             this.collider = collider;
+            this.name = collider.name;
             this.collidedTime = collidedTime;
             this.damage = damage;
         }
@@ -41,16 +43,33 @@ public static class GlobalPredefinedModel
         public SpellType spellType;
         public float maxCooldown;
         public float currentCooldown;
-        public float resourcesCost;
-        public Sprite spellUI;
+        public Sprite UI;
+        public GameObject prefab;
+        public GameObject effectPrefab;
 
-        public Spell(SpellType spellType, float maxCooldown, float resourcesCost, Sprite spellUI)
+        public Spell(SpellType spellType, float maxCooldown, Sprite UI, GameObject prefab, GameObject effectPrefab)
         {
             this.spellType = spellType;
             this.maxCooldown = maxCooldown;
             this.currentCooldown = 0;
-            this.resourcesCost = resourcesCost;
-            this.spellUI = spellUI;
+            this.UI = UI;
+            this.prefab = prefab;
+            this.effectPrefab = effectPrefab;
+        }
+    }
+
+    [Serializable]
+    public class SpellEffect
+    {
+        public GameObject spell;
+        public GameObject effect;
+        public SpellType spellType;
+
+        public SpellEffect(GameObject spell, GameObject effect, SpellType spellType)
+        {
+            this.spell = spell;
+            this.effect = effect;
+            this.spellType = spellType;
         }
     }
 
@@ -195,8 +214,9 @@ public static class GlobalPredefinedModel
                     new Spell(
                         spellType,
                         allSpellsData[(int) spellType].maxCooldown,
-                        allSpellsData[(int) spellType].resourcesCost,
-                        allSpellsData[(int) spellType].spellUI
+                        allSpellsData[(int) spellType].UI,
+                        allSpellsData[(int) spellType].prefab,
+                        allSpellsData[(int)spellType].effectPrefab
                     )
                 );
 

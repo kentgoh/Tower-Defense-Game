@@ -6,6 +6,8 @@ public class GameActivity : MonoBehaviour
 {
     public static GameActivity Instance { get; private set; }
 
+    public new Camera camera;
+
     public GA_Wave ga_Wave;
     public GA_Time ga_Time;
     public GA_Resource ga_Resource;
@@ -27,6 +29,7 @@ public class GameActivity : MonoBehaviour
         if (!Instance)
             Instance = this;
 
+        camera = Camera.main;
         InitParameters();
         StartCoroutine("AddResources");
         AudioManager.Instance.PlayBGM();

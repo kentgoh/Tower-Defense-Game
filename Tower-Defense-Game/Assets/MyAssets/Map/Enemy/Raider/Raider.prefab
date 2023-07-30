@@ -1062,7 +1062,9 @@ MonoBehaviour:
   explosionEffect: {fileID: 7901763161738548318}
   destinatedWayPointIndex: 0
   damageDeal: 0
-  DPSBulletColliders: []
+  bulletColliders: []
+  spellColliders: []
+  spellEffectList: []
 --- !u!136 &4968458117978116589
 CapsuleCollider:
   m_ObjectHideFlags: 0

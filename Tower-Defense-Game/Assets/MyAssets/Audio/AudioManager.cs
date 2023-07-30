@@ -18,7 +18,9 @@ public class AudioManager : MonoBehaviour
         TurretUIError,
         TurretBuild,
         LoseGame,
-        WinGame
+        WinGame,
+        IceSpell,
+        LightningSpell
     }
 
     private void Awake()

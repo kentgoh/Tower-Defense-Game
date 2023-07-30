@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static GlobalPredefinedModel;
@@ -30,7 +29,7 @@ public class SpellUIActivity : MonoBehaviour
             try
             {
                 if (spellUISlot[i].transform.Find("Image")) { 
-                    spellUISlot[i].transform.Find("Image").GetComponent<Image>().sprite = availableSpells[i].spellUI;
+                    spellUISlot[i].transform.Find("Image").GetComponent<Image>().sprite = availableSpells[i].UI;
                     spellUISlot[i].transform.name = availableSpells[i].spellType.ToString();
                 }
             }
@@ -67,10 +66,24 @@ public class SpellUIActivity : MonoBehaviour
                 if (currentSpell.currentCooldown > 0)
                 {
                     currentSpell.currentCooldown -= Time.deltaTime;
+                    if (currentSpell.currentCooldown < 0)
+                        currentSpell.currentCooldown = 0;
+
                     spellUI.transform.Find("Counter").GetComponent<TMP_Text>().text = Mathf.Ceil(currentSpell.currentCooldown).ToString();
+                    Color color;
+                    ColorUtility.TryParseHtmlString(
+                        "#6F6C6C",
+                        out color
+                    );
+                    spellUI.transform.Find("Image").GetComponent<Image>().color = color;
+  
                 }
                 else
+                {
+                    spellUI.transform.Find("Image").GetComponent<Image>().color = Color.white;
                     spellUI.transform.Find("Counter").GetComponent<TMP_Text>().text = "";
+                }
+
 
                 if(GameActivity.Instance.ga_Spell.selectedSpell == null && spellUI.transform.Find("Border").GetComponent<Image>())
                 {
