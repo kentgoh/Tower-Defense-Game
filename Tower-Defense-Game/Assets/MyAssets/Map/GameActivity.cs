@@ -93,7 +93,7 @@ public class GameActivity : MonoBehaviour
         ga_Time = new GA_Time();
         ga_Resource = new GA_Resource(gameInitScript.startingResources, gameInitScript.resourcesPerSecond);
         ga_Turret = new GA_Turret(gameInitScript.turrets);
-        ga_Spell = new GA_Spell(gameInitScript.startingSpellTypes, gameInitScript.spells);
+        ga_Spell = new GA_Spell(gameInitScript.startingSpells, gameInitScript.spellSOList);
 
     }
 

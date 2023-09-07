@@ -30,7 +30,7 @@ public class SpellUIActivity : MonoBehaviour
             {
                 if (spellUISlot[i].transform.Find("Image")) { 
                     spellUISlot[i].transform.Find("Image").GetComponent<Image>().sprite = availableSpells[i].UI;
-                    spellUISlot[i].transform.name = availableSpells[i].spellType.ToString();
+                    spellUISlot[i].transform.name = availableSpells[i].spellName.ToString();
                 }
             }
             catch(ArgumentOutOfRangeException)
@@ -58,7 +58,7 @@ public class SpellUIActivity : MonoBehaviour
     {
         foreach (GameObject spellUI in spellUISlot)
         {
-            Spell currentSpell = GameActivity.Instance.ga_Spell.spells.Find(x => x.spellType.ToString().Equals(spellUI.name));
+            Spell currentSpell = GameActivity.Instance.ga_Spell.spells.Find(x => x.spellName.ToString().Equals(spellUI.name));
             // Display cooldown text
             if (currentSpell != null && spellUI.transform.Find("Counter").GetComponent<TMP_Text>())
             {

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class AudioManager : MonoBehaviour
@@ -19,8 +20,9 @@ public class AudioManager : MonoBehaviour
         TurretBuild,
         LoseGame,
         WinGame,
-        IceSpell,
-        LightningSpell
+        BlizzardSE,
+        LightningStrikeSE,
+        MagneticBoltSE
     }
 
     private void Awake()
@@ -57,6 +59,19 @@ public class AudioManager : MonoBehaviour
             AudioSource audioSource = transform.GetComponents<AudioSource>()[(int)audioSourceType];
             audioSource.PlayOneShot(audioSource.clip);
         }
+    }
+
+    public AudioSource PlayLoopSound(AudioSourceType audioSourceType)
+    {
+        if (transform.GetComponents<AudioSource>()[(int)audioSourceType] && soundOn)
+        {
+            AudioSource audioSource = transform.GetComponents<AudioSource>()[(int)audioSourceType];
+            audioSource.loop = true;
+            audioSource.Play();
+            return audioSource;
+        }
+
+        return new AudioSource();
     }
 
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using static GlobalPredefinedModel;
 
 public static class GlobalPredefinedModel
 {
@@ -40,21 +41,30 @@ public static class GlobalPredefinedModel
     [Serializable]
     public class Spell
     {
-        public SpellType spellType;
+        public SpellName spellName;
+        public string name;
         public float maxCooldown;
         public float currentCooldown;
+        public float damage;
+
         public Sprite UI;
         public GameObject prefab;
         public GameObject effectPrefab;
 
-        public Spell(SpellType spellType, float maxCooldown, Sprite UI, GameObject prefab, GameObject effectPrefab)
+        public Spell(SpellSO spellSO)
         {
-            this.spellType = spellType;
-            this.maxCooldown = maxCooldown;
-            this.currentCooldown = 0;
-            this.UI = UI;
-            this.prefab = prefab;
-            this.effectPrefab = effectPrefab;
+            spellName = spellSO.spellName;
+            name = spellSO.actualName;
+
+            maxCooldown = spellSO.cooldown;
+            currentCooldown = 0;
+            damage = spellSO.damage;
+
+            UI= spellSO.UI;
+            prefab = spellSO.prefab;
+
+            if (prefab.GetComponent<SpellEnemyInteraction>())
+                prefab.GetComponent<SpellEnemyInteraction>().spellSO = spellSO;
         }
     }
 
@@ -63,13 +73,28 @@ public static class GlobalPredefinedModel
     {
         public GameObject spell;
         public GameObject effect;
-        public SpellType spellType;
+        public SpellName spellName;
 
-        public SpellEffect(GameObject spell, GameObject effect, SpellType spellType)
+        public SpellEffect(GameObject spell, GameObject effect, SpellName spellName)
         {
             this.spell = spell;
             this.effect = effect;
-            this.spellType = spellType;
+            this.spellName = spellName;
+        }
+    }
+
+    [Serializable]
+    public class SpellEnemyBinding
+    {
+        public GameObject target;
+        public GameObject spellEffect;
+        public AbnormalEffect abnormalEffect;
+
+        public SpellEnemyBinding(GameObject target, GameObject spellEffect, AbnormalEffect abnormalEffect)
+        {
+            this.target = target;
+            this.spellEffect = spellEffect;
+            this.abnormalEffect = abnormalEffect;
         }
     }
 
@@ -103,10 +128,20 @@ public static class GlobalPredefinedModel
         Left
     }
 
-    public enum SpellType
+    public enum SpellName
     {
-        Ice,
-        Lightning
+        Blizzard,
+        LightningStrike,
+        MagneticBolt,
+        IcePillar
+    }
+
+    public enum AbnormalEffect
+    {
+        None,
+        Weak,
+        Slow,
+        Stun
     }
 
     // ==================== struct ====================
@@ -202,23 +237,18 @@ public static class GlobalPredefinedModel
         public List<Spell> spells;
         public Spell selectedSpell;
 
-        public GA_Spell(List<SpellType> availableSpellTypes, List<Spell> allSpellsData)
+        public GA_Spell(List<SpellName> availableSpellNames, List<SpellSO> allSpellSO)
         {
             spells = new List<Spell>();
             selectedSpell = null;
 
             // Add available spell to ga_spell according to the data in allSpellsData
-            foreach(SpellType spellType in availableSpellTypes)
+            foreach(SpellName spellName in availableSpellNames)
             {
-                spells.Add(
-                    new Spell(
-                        spellType,
-                        allSpellsData[(int) spellType].maxCooldown,
-                        allSpellsData[(int) spellType].UI,
-                        allSpellsData[(int) spellType].prefab,
-                        allSpellsData[(int)spellType].effectPrefab
-                    )
-                );
+                SpellSO spellSO = allSpellSO.Find(x => x.spellName.Equals(spellName));
+
+                if(spellSO != null)
+                    spells.Add(new Spell(spellSO));
 
             }
         }

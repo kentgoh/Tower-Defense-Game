@@ -283,7 +283,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
         // The parent name of the pointed image is the spell name
         string selectedSpellName = selectedUI.transform.parent.name;
 
-        Spell selectedSpell = GameActivity.Instance.ga_Spell.spells.Find(x => x.spellType.ToString().Equals(selectedSpellName));
+        Spell selectedSpell = GameActivity.Instance.ga_Spell.spells.Find(x => x.spellName.ToString().Equals(selectedSpellName));
         if (!selectedSpell.Equals(null))
         {
             if(selectedSpell.currentCooldown == 0)

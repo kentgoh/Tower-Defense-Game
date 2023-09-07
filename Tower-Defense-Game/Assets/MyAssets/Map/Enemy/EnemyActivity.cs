@@ -13,7 +13,11 @@ public class EnemyActivity : MonoBehaviour
     public EnemyType enemyType;
     private Animator animator;
 
-    public float speed;
+    private float initSpeed;
+    private float speed;
+    private float stunnedDuration = 0;
+    public float damageRatio = 1.0f;
+
     public int maxHealthPoint;
     public int healthPoint;
     private GameObject healthBar;
@@ -32,15 +36,15 @@ public class EnemyActivity : MonoBehaviour
     // Damage deal
     public int damageDeal;
 
-    // Collider
     public List<DPSCollider> bulletColliders;
-    public List<DPSCollider> spellColliders;
-
-    public List<SpellEffect> spellEffectList;
+    public List<SpellEnemyBinding> spellEnemyBindingList;
    
     // Start is called before the first frame update
     void Awake()
     {
+        bulletColliders = new List<DPSCollider>();
+        spellEnemyBindingList = new List<SpellEnemyBinding>();
+
         if (transform.Find("Canvas/HealthBar"))
         {
             healthBar = transform.Find("Canvas/HealthBar").gameObject;
@@ -57,25 +61,35 @@ public class EnemyActivity : MonoBehaviour
     void Update()
     {
         DisplayHealthPoint();
-        AutoMove();
-        CheckSpellList();
+
+        // Only stunned will return false
+        if(CheckAbnormalEffect())
+            AutoMove();
     }
 
     private void OnTriggerEnter(Collider collider)
     {
-        var targetTag = collider.transform.tag;
+        if (collider.gameObject.layer.Equals(LayerMask.NameToLayer("InteractableWithEnemy")))
+        {
+            var targetTag = collider.transform.tag;
 
-        // Collide with endPoint
-        if (targetTag.Equals("EndPoint"))
-            StartCoroutine(DestroyEnemyAfterHittingEndPoint());
+            // Collide with endPoint
+            if (targetTag.Equals("EndPoint"))
+                StartCoroutine(DestroyEnemyAfterHittingEndPoint());
 
-        // Collide with bullet
-        if (targetTag.Equals("Bullet"))
-            DealDamageOnEnemyByBulletType(collider);
+            // Collide with bullet
+            if (targetTag.Equals("Bullet"))
+                DealDamageOnEnemyByBulletType(collider);
 
-        // Collide with spell
-        if (targetTag.Equals("Spell"))
-            DealDamageOnEnemyBySpellType(collider);
+
+            // Collide with spell
+            if (targetTag.Equals("Spell"))
+            {
+                SpellEnemyInteraction spellEnemyInteraction = collider.GetComponent<SpellEnemyInteraction>();
+                if (spellEnemyInteraction != null)
+                    spellEnemyInteraction.FirstCollisionWithEnemy(gameObject);
+            }
+        }
     }
 
     private void OnTriggerStay(Collider collider)
@@ -87,8 +101,16 @@ public class EnemyActivity : MonoBehaviour
     private void OnTriggerExit(Collider collider)
     {
         if (collider.gameObject.layer.Equals(LayerMask.NameToLayer("InteractableWithEnemy"))) {
+            var targetTag = collider.transform.tag;
+
             RemoveFromBulletDPSList(collider);
-            RemoveFromSpellDPSList(collider);
+
+            if (targetTag.Equals("Spell"))
+            {
+                SpellEnemyInteraction spellEnemyInteraction = collider.GetComponent<SpellEnemyInteraction>();
+                if (spellEnemyInteraction != null)
+                    spellEnemyInteraction.StopCollisionWithEnemy(gameObject);
+            }
         }
     }
 
@@ -115,6 +137,7 @@ public class EnemyActivity : MonoBehaviour
                 {
                     maxHealthPoint = 10;
                     healthPoint = 10;
+                    initSpeed = 0.2f;
                     speed = 0.2f;
                     damageDeal = 2;
                     break;
@@ -123,6 +146,7 @@ public class EnemyActivity : MonoBehaviour
                 {
                     maxHealthPoint = 5;
                     healthPoint = 5;
+                    initSpeed = 0.5f;
                     speed = 0.5f;
                     damageDeal = 1;
                     break;
@@ -131,6 +155,7 @@ public class EnemyActivity : MonoBehaviour
                 {
                     maxHealthPoint = 30;
                     healthPoint = 30;
+                    initSpeed = 0.1f;
                     speed = 0.1f;
                     damageDeal = 5;
                     break;
@@ -165,7 +190,6 @@ public class EnemyActivity : MonoBehaviour
 
             transform.Find("Model").LookAt(destinatedWayPoint.position);
         }
-
 
     }
 
@@ -253,13 +277,13 @@ public class EnemyActivity : MonoBehaviour
         }
     }
 
-    private void DealDamageOnEnemy(int damage)
+    public void DealDamageOnEnemy(int damage)
     {
         // Display healthbar for damaged 
         if (!isDamaged)
             isDamaged = true;
 
-        healthPoint -= damage;
+        healthPoint -= (int)(damage * damageRatio);
 
         if (healthPoint <= 0)
             StartCoroutine(DestroyEnemy());
@@ -303,103 +327,206 @@ public class EnemyActivity : MonoBehaviour
     }
 
     // ====================== Spell ======================
-    private void DealDamageOnEnemyBySpellType(Collider collider)
+    public void DecreaseMovementSpeed(float ratio)
     {
-        string spellName = collider.name;
-        Spell spell = GameActivity.Instance.ga_Spell.spells.Find(x => x.spellType.ToString().Equals(spellName));
-        if(spell != null) { 
-            if (spellName.Equals("Ice"))
-                HitByIceSpell(collider, spell);
-            else if (spellName.Equals("Lightning"))
-                StartCoroutine(HitByLightningSpell(collider, spell));
-        }
-        else
-            Debug.Log("Spell name not found");
-
+        // It is possible there is 2 slow effect deal on enemy, only use the slowest speed
+        float result = speed * ratio;
+        if (result < speed)
+            speed = result;
     }
 
-    private void HitByIceSpell(Collider collider, Spell spell)
+    public void InitMovementSpeed()
     {
-        GameObject effect = Instantiate(spell.effectPrefab, gameObject.transform);
-        
-        if (gameObject.transform.Find("Model"))
-            effect.transform.position = gameObject.transform.Find("Model").position;
-
-        DecreaseMovementSpeed(0.5f);
-        
-        SpellEffect spellEffect = new SpellEffect(collider.gameObject, effect, SpellType.Ice);
-        spellEffectList.Add(spellEffect);
-
-        DPSCollider temp = new DPSCollider(collider, 0, 0);
-        spellColliders.Add(temp);
-
+        speed = initSpeed;
     }
 
-    private IEnumerator HitByLightningSpell(Collider collider, Spell spell)
+    public void Stunned(float duration)
     {
-        GameObject effect = Instantiate(spell.effectPrefab, gameObject.transform);
-
-        if (gameObject.transform.Find("Model"))
-            effect.transform.position = gameObject.transform.Find("Model").position;
-
-        SpellEffect spellEffect = new SpellEffect(collider.gameObject, effect, SpellType.Lightning);
-
-        if (!spellEffectList.Exists(x => x.spellType.Equals(SpellType.Lightning)))
-            spellEffectList.Add(spellEffect);
-
-        float tempSpeed = speed;
-        speed = 0;
-        yield return new WaitForSeconds(2);
-        speed = tempSpeed;
-
-        spellEffectList.Remove(spellEffect);
-        Destroy(effect);
+        if (duration > stunnedDuration)
+            stunnedDuration = duration;
     }
 
-    private void DecreaseMovementSpeed(float ratio)
+    public void StunnedCountdown()
     {
-        speed *= ratio;
-    }
-
-    private void IncreaseMovementSpeed(float ratio)
-    {
-        speed /= ratio;
-    }
-
-    private void CheckSpellList()
-    {
-        foreach (SpellEffect spellEffect in spellEffectList.ToList())
-        {
-            if (spellEffect.spell == null)
+        if(stunnedDuration > 0) { 
+            stunnedDuration -= Time.deltaTime;
+            if (stunnedDuration < 0)
             {
-                // Spell disappeared after complete the duration (OnTriggerExit() can't determine)
-                if (spellEffect.spellType.ToString().Equals("Ice")) { 
-                    IncreaseMovementSpeed(0.5f);
-                    Destroy(spellEffect.effect);
-                    spellEffectList.Remove(spellEffect);
-                    break;
-                }
-            }
-        }
-    }
+                stunnedDuration = 0;
 
-    private void RemoveFromSpellDPSList(Collider collider)
-    {
-        // Remove the spell from collider list when it no more collide with current enemy
-        foreach (DPSCollider c in spellColliders.ToList())
-        {
-            if (c.collider == collider)
-            {
-                if (c.collider.name.Equals("Ice"))
+                // Remove all SpellEnemyBinding with Stun effect
+                for(int i = spellEnemyBindingList.Count - 1; i > -1; i--)
                 {
-                    IncreaseMovementSpeed(0.5f);
-                    spellColliders.Remove(c);
-                    SpellEffect spellEffect = spellEffectList.Find(x => x.spell.Equals(collider.gameObject));
-                    Destroy(spellEffect.effect);
-                    spellEffectList.Remove(spellEffect);
+                    if (spellEnemyBindingList[i].abnormalEffect == AbnormalEffect.Stun)
+                    {
+                        Destroy(spellEnemyBindingList[i].spellEffect);
+                        RemoveSpellEnemyBinding(spellEnemyBindingList[i]);
+                    }
                 }
-
             }
         }
     }
+
+    public void Weaken(float ratio)
+    {
+        float temp = 1 * ratio;
+
+        if(temp > damageRatio)
+            damageRatio = temp;
+    }
+
+    public void InitDamageRatio()
+    {
+        damageRatio = 1;
+    }
+
+    public List<AbnormalEffect> GetAllAbnormalEffect()
+    {
+        List<AbnormalEffect> result = new List<AbnormalEffect>();
+        foreach(SpellEnemyBinding spellEnemyBinding in spellEnemyBindingList.ToList())
+            result.Add(spellEnemyBinding.abnormalEffect);
+ 
+        return result;
+    }
+
+    public Boolean CheckAbnormalEffect()
+    {
+        Boolean result = true;
+        Boolean isSlowed = false;
+        Boolean isWeaken = false;
+
+        List<AbnormalEffect> abnormalEffectList = GetAllAbnormalEffect();
+        foreach(AbnormalEffect abnormalEffect in abnormalEffectList)
+        {
+            // Stun effect applied on enemy, AutoMove() won't be execute
+            if(abnormalEffect == AbnormalEffect.Stun)
+            {
+                result = false;
+                StunnedCountdown();
+            }
+
+            if(abnormalEffect == AbnormalEffect.Slow)
+                isSlowed = true;
+
+            if (abnormalEffect == AbnormalEffect.Weak)
+                isWeaken = true;
+        }
+
+        // Slow effect no more apply on enemy, set back to initial speed
+        if (!isSlowed)
+            InitMovementSpeed();
+        if (!isWeaken)
+            InitDamageRatio();
+
+        return result;
+    }
+
+    // ====================== SpellEnemyBinding ======================
+    public void AddNewSpellEnemyBinding(SpellEnemyBinding spellEnemyBinding)
+    {
+        spellEnemyBindingList.Add(spellEnemyBinding);
+    }
+
+    public void RemoveSpellEnemyBinding(SpellEnemyBinding spellEnemyBinding)
+    {
+        spellEnemyBindingList.Remove(spellEnemyBinding);
+    }
+
+    public SpellEnemyBinding GetSpellEnemyBindingBySpell(GameObject spell)
+    {
+        return spellEnemyBindingList.Find(x => (x.target == spell));
+    }
+
+
+    //private void DealDamageOnEnemyBySpellType(Collider collider)
+    //{
+    //    string spellName = collider.name;
+    //    Spell spell = GameActivity.Instance.ga_Spell.spells.Find(x => x.spellName.ToString().Equals(spellName));
+    //    if (spell != null)
+    //    {
+    //        if (spellName.Equals("Blizzard"))
+    //            HitByIceSpell(collider, spell);
+    //        else if (spellName.Equals("LightningStrike"))
+    //            StartCoroutine(HitByLightningSpell(collider, spell));
+    //    }
+    //    else
+    //        Debug.Log("Spell name not found");
+
+    //}
+
+    //private void HitByIceSpell(Collider collider, Spell spell)
+    //{
+    //    GameObject effect = Instantiate(spell.effectPrefab, gameObject.transform);
+
+    //    if (gameObject.transform.Find("Model"))
+    //        effect.transform.position = gameObject.transform.Find("Model").position;
+
+    //    DecreaseMovementSpeed(0.5f);
+
+    //    SpellEffect spellEffect = new SpellEffect(collider.gameObject, effect, SpellName.Blizzard);
+    //    spellEffectList.Add(spellEffect);
+
+    //    DPSCollider temp = new DPSCollider(collider, 0, 0);
+    //    spellColliders.Add(temp);
+
+    //}
+
+    //private IEnumerator HitByLightningSpell(Collider collider, Spell spell)
+    //{
+    //    GameObject effect = Instantiate(spell.effectPrefab, gameObject.transform);
+
+    //    if (gameObject.transform.Find("Model"))
+    //        effect.transform.position = gameObject.transform.Find("Model").position;
+
+    //    SpellEffect spellEffect = new SpellEffect(collider.gameObject, effect, SpellName.Blizzard);
+
+    //    if (!spellEffectList.Exists(x => x.spellName.Equals(SpellName.LightningStrike)))
+    //        spellEffectList.Add(spellEffect);
+
+    //    float tempSpeed = speed;
+    //    speed = 0;
+    //    yield return new WaitForSeconds(2);
+    //    speed = tempSpeed;
+
+    //    spellEffectList.Remove(spellEffect);
+    //    Destroy(effect);
+    //}
+
+    //private void CheckSpellList()
+    //{
+    //    foreach (SpellEffect spellEffect in spellEffectList.ToList())
+    //    {
+    //        if (spellEffect.spell == null)
+    //        {
+    //            Spell disappeared after complete the duration(OnTriggerExit() can't determine)
+    //            if (spellEffect.spellName.ToString().Equals("Blizzard"))
+    //            {
+    //                IncreaseMovementSpeed(0.5f);
+    //                Destroy(spellEffect.effect);
+    //                spellEffectList.Remove(spellEffect);
+    //                break;
+    //            }
+    //        }
+    //    }
+    //}
+
+    //private void RemoveFromSpellDPSList(Collider collider)
+    //{
+    //    Remove the spell from collider list when it no more collide with current enemy
+    //    foreach (DPSCollider c in spellColliders.ToList())
+    //    {
+    //        if (c.collider == collider)
+    //        {
+    //            if (c.collider.name.Equals("Blizzard"))
+    //            {
+    //                IncreaseMovementSpeed(0.5f);
+    //                spellColliders.Remove(c);
+    //                SpellEffect spellEffect = spellEffectList.Find(x => x.spell.Equals(collider.gameObject));
+    //                Destroy(spellEffect.effect);
+    //                spellEffectList.Remove(spellEffect);
+    //            }
+
+    //        }
+    //    }
+    //}
 }

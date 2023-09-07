@@ -72,18 +72,20 @@ public class MapActivity : MonoBehaviour
                 if (raycastHit.collider.CompareTag("Base"))
                     if (selectedSpell != null)
                     {
-                        StartCoroutine(ExecutingSpell(selectedSpell));
+                        ExecutingSpell(selectedSpell);
                         selectedSpell.currentCooldown = selectedSpell.maxCooldown;
                         Destroy(spellIndicator);
                         GameActivity.Instance.ResetSelectedSpell();
                     }
+                    else
+                        Debug.Log("Selected Spell not found");
             }
 
         }
 
     }
 
-    IEnumerator ExecutingSpell(Spell selectedSpell)
+    private void ExecutingSpell(Spell selectedSpell)
     {
         // Get spellIndicator position
         Vector3 spellPosition = spellIndicator.transform.position;
@@ -96,18 +98,18 @@ public class MapActivity : MonoBehaviour
                 spellPosition,
                 Quaternion.identity
             );
-        spellGameObject.name = selectedSpell.spellType.ToString();
+        spellGameObject.name = selectedSpell.spellName.ToString();
 
-        if (selectedSpell.spellType == SpellType.Ice) {
-            AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.IceSpell);
-            yield return new WaitForSeconds(5.0f);
-        }
-        else if (selectedSpell.spellType == SpellType.Lightning) {
-            AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.LightningSpell);
-            yield return new WaitForSeconds(0.2f);
-        }
+        //if (selectedSpell.spellName == SpellName.Blizzard) {
+        //    AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.IceSpell);
+        //    yield return new WaitForSeconds(5.0f);
+        //}
+        //else if (selectedSpell.spellName == SpellName.LightningStrike) {
+        //    AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.LightningSpell);
+        //    yield return new WaitForSeconds(0.2f);
+        //}
 
-        // Destroy spell after certain time
-        Destroy(spellGameObject);
+        //// Destroy spell after certain time
+        //Destroy(spellGameObject);
     }
 }

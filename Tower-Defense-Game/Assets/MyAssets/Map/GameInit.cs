@@ -10,7 +10,7 @@ public class GameInit : MonoBehaviour
     public List<Enemy> enemies;
     public List<Wave> waves;
     public List<Turret> turrets;
-    public List<Spell> spells;     
+    public List<SpellSO> spellSOList;     
 
     public DebugMode debugMode = new DebugMode(false, false);
 
@@ -19,7 +19,7 @@ public class GameInit : MonoBehaviour
     public int startingResources;
     public int resourcesPerSecond;
 
-    public List<SpellType> startingSpellTypes;
+    public List<SpellName> startingSpells;
 
     void Awake()
     {

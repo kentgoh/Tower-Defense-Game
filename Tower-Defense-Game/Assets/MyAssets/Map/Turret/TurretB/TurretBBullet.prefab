@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 4547715595479352211}
   m_Layer: 7
   m_Name: TurretBBullet
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 571263437765494676}
   - component: {fileID: 2564989341941824604}
   - component: {fileID: 3830145797783006899}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LaserRight
   m_TagString: Bullet
   m_Icon: {fileID: 0}
@@ -262,7 +262,7 @@ GameObject:
   - component: {fileID: 3080655837695027139}
   - component: {fileID: 9198045539410520926}
   - component: {fileID: 1135082942081353402}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: LaserLeft
   m_TagString: Bullet
   m_Icon: {fileID: 0}
