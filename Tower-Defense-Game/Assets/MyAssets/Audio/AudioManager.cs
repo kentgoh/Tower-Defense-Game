@@ -48,13 +48,13 @@ public class AudioManager : MonoBehaviour
 
     public void EnableSound(bool enable)
     {
-        AudioListener.pause = !enable;
+        AudioListener.volume = enable ? 1 : 0;
         soundOn = enable;
     }
 
     public void PlaySound(AudioSourceType audioSourceType)
     {
-        if (transform.GetComponents<AudioSource>()[(int)audioSourceType] && soundOn)
+        if (transform.GetComponents<AudioSource>()[(int)audioSourceType])
         {
             AudioSource audioSource = transform.GetComponents<AudioSource>()[(int)audioSourceType];
             audioSource.PlayOneShot(audioSource.clip);
@@ -63,7 +63,7 @@ public class AudioManager : MonoBehaviour
 
     public AudioSource PlayLoopSound(AudioSourceType audioSourceType)
     {
-        if (transform.GetComponents<AudioSource>()[(int)audioSourceType] && soundOn)
+        if (transform.GetComponents<AudioSource>()[(int)audioSourceType])
         {
             AudioSource audioSource = transform.GetComponents<AudioSource>()[(int)audioSourceType];
             audioSource.loop = true;

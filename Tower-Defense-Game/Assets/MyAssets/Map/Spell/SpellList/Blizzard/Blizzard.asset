@@ -16,7 +16,7 @@ MonoBehaviour:
   actualName: Blizzard
   cooldown: 10
   damage: 0
-  duration: 5
+  duration: 4.5
   abnormalEffect: 0
   prefab: {fileID: 3261803961725530962, guid: c8bf3b5ac39cfc0418ec5b11165a022a, type: 3}
   effectPrefab: {fileID: 6126188424833946103, guid: d2621686110439f45b8d2e5d07032986, type: 3}

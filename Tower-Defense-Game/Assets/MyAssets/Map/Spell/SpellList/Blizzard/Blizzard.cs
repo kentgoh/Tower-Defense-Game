@@ -57,8 +57,9 @@ public class Blizzard : SpellEnemyInteraction
 
     public override IEnumerator SpellLifecycle(float duration)
     {
-        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.BlizzardSE);
+        AudioSource audioSource = AudioManager.Instance.PlayLoopSound(AudioManager.AudioSourceType.BlizzardSE);
         yield return new WaitForSeconds(duration);
+        audioSource.Stop();
         Destroy(gameObject);
     }
 
