@@ -60,7 +60,7 @@ public static class GlobalPredefinedModel
             currentCooldown = 0;
             damage = spellSO.damage;
 
-            UI= spellSO.UI;
+            UI = spellSO.UI;
             prefab = spellSO.prefab;
 
             if (prefab.GetComponent<SpellEnemyInteraction>())
@@ -96,6 +96,35 @@ public static class GlobalPredefinedModel
             this.spellEffect = spellEffect;
             this.abnormalEffect = abnormalEffect;
         }
+    }
+
+    [Serializable]
+    public class GA_MouseState
+    {
+        public MouseState mouseState;
+
+        public GA_MouseState()
+        {
+            mouseState = MouseState.None;
+        }
+        public void UpdateMouseState(MouseState mouseState)
+        {
+            if (!(this.mouseState == mouseState)) {   
+                //Debug.Log(String.Format("Update Mouse State from {0} to {1}", this.mouseState.ToString(), mouseState.ToString()));
+                this.mouseState = mouseState;
+            }
+        }
+
+        public bool IsOnUI()
+        {
+            return mouseState.ToString().Contains("UI");
+        }
+
+        public bool IsOnMap()
+        {
+            return mouseState.ToString().Contains("Map");
+        }
+
     }
 
     // ==================== enum ====================
@@ -142,6 +171,16 @@ public static class GlobalPredefinedModel
         Weak,
         Slow,
         Stun
+    }
+
+    public enum MouseState
+    {
+        None,
+        Spell_UI,
+        Turret_UI,
+        Button_UI,
+        Plane_Map,
+        Base_Map
     }
 
     // ==================== struct ====================

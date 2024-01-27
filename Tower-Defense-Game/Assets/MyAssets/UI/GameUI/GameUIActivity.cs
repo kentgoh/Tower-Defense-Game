@@ -21,7 +21,6 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
     public bool mouseReleasedOnCameraMoveButton = true;
     int directionIndex = 0;
 
-
     void Awake()
     {
         if (!Instance)
@@ -33,9 +32,11 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
     // Update is called once per frame
     void Update()
     {
-        MouseHoverDetection();
-        ZoomCamera();
-        MoveCamera();
+        if (Time.timeScale != 0) {
+            MouseHoverDetection();
+            ZoomCamera();
+            MoveCamera();
+        }
 
     }
 
@@ -67,6 +68,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
 
                     EnablePointedSpellDetailsUI(pointedSpellName);
                     tagMatched = true;
+                    GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.Spell_UI);
                     break;
 
                 }
@@ -80,6 +82,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
                         DisableAllTurretDetailsUI();
                         EnablePointedTurretDetailsUI(turret);
                         tagMatched = true;
+                        GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.Turret_UI);
                         break;
                     }
                 }
@@ -90,6 +93,10 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
                 // Mouse pointer does point to more than one gameObject but not spellUI or turretUI
                 DisableAllSpellDetailsUI();
                 DisableAllTurretDetailsUI();
+
+                if(GameActivity.Instance.ga_MouseState.mouseState == MouseState.Spell_UI || GameActivity.Instance.ga_MouseState.mouseState == MouseState.Turret_UI)
+                    GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.None);
+
             }
 
         }
@@ -98,6 +105,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
             DisableAllSpellDetailsUI();
             DisableAllTurretDetailsUI();
         }
+
     }
 
     // Mouse click activity
@@ -254,6 +262,16 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
         Camera camera = GameActivity.Instance.camera;
         camera.transform.position = new Vector3(0, 12, -5);
         camera.fieldOfView = 70;
+    }
+
+    public void PointerOnCameraPanel()
+    {
+        GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.Button_UI);
+    }
+
+    public void PointerOutCameraPanel()
+    {
+        GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.None);
     }
 
     // ==================== Spell UI Related ====================

@@ -14,6 +14,8 @@ public class GameActivity : MonoBehaviour
     public GA_Turret ga_Turret;
     public GA_Spell ga_Spell;
 
+    public GA_MouseState ga_MouseState;
+
     // end Point Health
     public int endPointHealth;
     // time scale before pause
@@ -94,6 +96,7 @@ public class GameActivity : MonoBehaviour
         ga_Resource = new GA_Resource(gameInitScript.startingResources, gameInitScript.resourcesPerSecond);
         ga_Turret = new GA_Turret(gameInitScript.turrets);
         ga_Spell = new GA_Spell(gameInitScript.startingSpells, gameInitScript.spellSOList);
+        ga_MouseState = new GA_MouseState();
 
     }
 

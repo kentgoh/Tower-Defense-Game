@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using static GlobalPredefinedModel;
 
 public class ButtonActivity : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
@@ -16,16 +17,19 @@ public class ButtonActivity : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void OnPointerEnter(PointerEventData pointerEventData)
     {
         transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+        GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.Button_UI);
     }
 
     public void OnPointerClick(PointerEventData pointerEventData)
     {
         transform.localScale = cachedScale;
         AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.ButtonClick);
+        GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.None);
     }
 
     public void OnPointerExit(PointerEventData pointerEventData)
     {
         transform.localScale = cachedScale;
+        GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.None);
     }
 }
