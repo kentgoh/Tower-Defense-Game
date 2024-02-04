@@ -69,47 +69,59 @@ public class EnemyActivity : MonoBehaviour
 
     private void OnTriggerEnter(Collider collider)
     {
-        if (collider.gameObject.layer.Equals(LayerMask.NameToLayer("InteractableWithEnemy")))
+        if (collider.transform.parent != null)
         {
-            var targetTag = collider.transform.tag;
-
-            // Collide with endPoint
-            if (targetTag.Equals("EndPoint"))
-                StartCoroutine(DestroyEnemyAfterHittingEndPoint());
-
-            // Collide with bullet
-            if (targetTag.Equals("Bullet"))
-                DealDamageOnEnemyByBulletType(collider);
-
-
-            // Collide with spell
-            if (targetTag.Equals("Spell"))
+            if (collider.transform.parent.gameObject.layer.Equals(LayerMask.NameToLayer("InteractableWithEnemy")))
             {
-                SpellEnemyInteraction spellEnemyInteraction = collider.GetComponent<SpellEnemyInteraction>();
-                if (spellEnemyInteraction != null)
-                    spellEnemyInteraction.FirstCollisionWithEnemy(gameObject);
+                GameObject target = collider.transform.parent.gameObject;
+                
+                // Collide with endPoint
+                if (target.tag.Equals("EndPoint"))
+                    StartCoroutine(DestroyEnemyAfterHittingEndPoint());
+
+                // Collide with bullet
+                if (target.tag.Equals("Bullet"))
+                    DealDamageOnEnemyByBulletType(collider);
+
+                // Collide with spell
+                if (target.tag.Equals("Spell"))
+                {
+                    SpellEnemyInteraction spellEnemyInteraction = target.GetComponent<SpellEnemyInteraction>();
+                    if (spellEnemyInteraction != null)
+                        spellEnemyInteraction.FirstCollisionWithEnemy(gameObject);
+                }
             }
         }
     }
 
     private void OnTriggerStay(Collider collider)
     {
-        if(collider.gameObject.layer.Equals(LayerMask.NameToLayer("InteractableWithEnemy")))
-            CheckBulletDPSList(collider);
+        if(collider.transform.parent != null)
+        {
+            if (collider.transform.parent.gameObject.layer.Equals(LayerMask.NameToLayer("InteractableWithEnemy")))
+            {
+                CheckBulletDPSList(collider);
+            }
+        }
+
     }
 
     private void OnTriggerExit(Collider collider)
     {
-        if (collider.gameObject.layer.Equals(LayerMask.NameToLayer("InteractableWithEnemy"))) {
-            var targetTag = collider.transform.tag;
-
-            RemoveFromBulletDPSList(collider);
-
-            if (targetTag.Equals("Spell"))
+        if (collider.transform.parent != null)
+        {
+            if (collider.transform.parent.gameObject.layer.Equals(LayerMask.NameToLayer("InteractableWithEnemy")))
             {
-                SpellEnemyInteraction spellEnemyInteraction = collider.GetComponent<SpellEnemyInteraction>();
-                if (spellEnemyInteraction != null)
-                    spellEnemyInteraction.StopCollisionWithEnemy(gameObject);
+                GameObject target = collider.transform.parent.gameObject;
+
+                RemoveFromBulletDPSList(collider);
+
+                if (target.tag.Equals("Spell"))
+                {
+                    SpellEnemyInteraction spellEnemyInteraction = target.GetComponent<SpellEnemyInteraction>();
+                    if (spellEnemyInteraction != null)
+                        spellEnemyInteraction.StopCollisionWithEnemy(gameObject);
+                }
             }
         }
     }

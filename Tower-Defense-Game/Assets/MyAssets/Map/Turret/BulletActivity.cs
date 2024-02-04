@@ -89,11 +89,18 @@ public class BulletActivity : MonoBehaviour
         if(collider.transform.tag == "Enemy")
         {
             if(turretName.Equals("TurretA") && collider.gameObject == target)
+            {
                 Destroy(gameObject);
+            }
+
         }
         if(collider.transform.tag == "Base")
         {
-            if (turretName.Equals("TurretC"))
+            if (turretName.Equals("TurretA"))
+            {
+                Destroy(gameObject);
+            }
+            else if (turretName.Equals("TurretC"))
             {
                 StartCoroutine("Explosion");
             }
@@ -117,7 +124,7 @@ public class BulletActivity : MonoBehaviour
 
     IEnumerator Explosion()
     {
-        GameObject explosionRange = transform.Find("ExplosionRange").gameObject;
+        GameObject explosionRange = transform.Find("Collider").gameObject;
         explosionRange.SetActive(true);
 
         if (AudioManager.Instance.soundOn)

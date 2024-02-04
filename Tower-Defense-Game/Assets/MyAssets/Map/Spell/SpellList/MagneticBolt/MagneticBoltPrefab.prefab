@@ -9654,7 +9654,7 @@ GameObject:
   - component: {fileID: 9195093492647317378}
   - component: {fileID: 1418654615231359557}
   m_Layer: 7
-  m_Name: EffectRange
+  m_Name: MagneticField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -24188,6 +24188,51 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &2701052846841469101
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1249737572848176402}
+  - component: {fileID: 1197189474891750599}
+  m_Layer: 2
+  m_Name: Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1249737572848176402
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2701052846841469101}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3423388300971593625}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1197189474891750599
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2701052846841469101}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 1, z: 3}
+  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1 &3012338937482764485
 GameObject:
   m_ObjectHideFlags: 0
@@ -29103,7 +29148,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3423388300971593625}
   - component: {fileID: -262359700159942987}
-  - component: {fileID: 63694396007476834}
   m_Layer: 7
   m_Name: MagneticBoltPrefab
   m_TagString: Spell
@@ -29125,6 +29169,7 @@ Transform:
   m_Children:
   - {fileID: 1750236544654867038}
   - {fileID: 4404234002714815323}
+  - {fileID: 1249737572848176402}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -29142,19 +29187,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spellSO: {fileID: 0}
   spellEnemyBindingList: []
---- !u!65 &63694396007476834
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3377181292992421420}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 1, z: 3}
-  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1 &3418261194079756379
 GameObject:
   m_ObjectHideFlags: 0
