@@ -23,7 +23,7 @@ public class ButtonActivity : MonoBehaviour, IPointerEnterHandler, IPointerExitH
     public void OnPointerClick(PointerEventData pointerEventData)
     {
         transform.localScale = cachedScale;
-        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.ButtonClick);
+        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "ButtonClick");
         GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.None);
     }
 

@@ -192,14 +192,14 @@ public class GameActivity : MonoBehaviour
     }
     public void LoseGame()
     {
-        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.LoseGame);
+        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "LoseGame");
         loseGameUI.SetActive(true);
         Time.timeScale = 0;
     }
 
     public void WinGame()
     {
-        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.WinGame);
+        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "WinGame");
         winGameUI.SetActive(true);
         Time.timeScale = 0;
     }

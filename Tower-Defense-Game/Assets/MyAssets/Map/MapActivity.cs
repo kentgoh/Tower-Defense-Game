@@ -105,7 +105,7 @@ public class MapActivity : MonoBehaviour
                     }
                     else
                     {
-                        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
+                        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UIError");
                         GameUIActivity.Instance.CoroutineDisplayDialog("Selected Spell not found.");
                     }
             }

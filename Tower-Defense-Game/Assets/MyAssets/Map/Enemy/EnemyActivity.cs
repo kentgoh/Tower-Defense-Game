@@ -219,7 +219,7 @@ public class EnemyActivity : MonoBehaviour
 
     private IEnumerator DestroyEnemyAfterHittingEndPoint()
     {
-        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Explosion);
+        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Map, "Explosion");
         if (animator != null)
             animator.SetBool("IsDestroy", true);
         if (explosionEffect != null)
@@ -246,7 +246,7 @@ public class EnemyActivity : MonoBehaviour
 
     private IEnumerator DestroyEnemy()
     {
-        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Explosion);
+        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Map, "Explosion");
         if (animator != null)
             animator.SetBool("IsDestroy", true);
         if (explosionEffect != null) 

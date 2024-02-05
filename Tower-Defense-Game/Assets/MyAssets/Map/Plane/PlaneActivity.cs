@@ -87,13 +87,13 @@ public class PlaneActivity : MonoBehaviour
                     // Turret existed on top of plane
                     if (turretCreated)
                     {
-                        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
+                        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UIError");
                         GameUIActivity.Instance.CoroutineDisplayDialog("Turret does created on top of plane, kindly remove it first.");
                     }
                     // Plane has been disabled for turret building
                     else
                     {
-                        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
+                        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UIError");
                         GameUIActivity.Instance.CoroutineDisplayDialog("Turret not able to build on this plane.");
                     }
                 }
@@ -147,14 +147,14 @@ public class PlaneActivity : MonoBehaviour
             rend.material.color = disabledColor;
 
             GameActivity.Instance.ResetSelectedTurretAfterCreated();
-            AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretBuild);
+            AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Map, "TurretBuild");
 
             GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.None);
 
         }
         else
         {
-            AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
+            AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UIError");
             GameUIActivity.Instance.CoroutineDisplayDialog("No turret has been selected.");
         }
     }

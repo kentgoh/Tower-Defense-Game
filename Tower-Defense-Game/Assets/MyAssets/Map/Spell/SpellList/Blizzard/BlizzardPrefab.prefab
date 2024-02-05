@@ -60,7 +60,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9673e4b657f7951478d5287b56f54e76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellSO: {fileID: 0}
+  spellSO: {fileID: 11400000, guid: a9785d30eed42d1479553ec08c886ad4, type: 2}
   spellEnemyBindingList: []
   slowRatio: 0.5
 --- !u!1 &3772956879510087621

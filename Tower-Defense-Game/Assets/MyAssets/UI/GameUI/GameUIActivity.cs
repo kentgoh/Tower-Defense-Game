@@ -167,17 +167,17 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
             if (turretCount > 0)
             {
                 GameActivity.Instance.SetSelectedTurretByTurretName(selectedUI.name, parentOfSelectedUI);
-                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUISelected);
+                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UISelected");
             }
             else
             {
-                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
+                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UIError");
                 CoroutineDisplayDialog("Turret not available to build.");
             }
         }
         else
         {
-            AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
+            AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UIError");
             CoroutineDisplayDialog("You don't have sufficient coin to build this turret.");
         }
         GameActivity.Instance.ResetSelectedSpell();
@@ -307,7 +307,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
             if(selectedSpell.currentCooldown == 0)
             {
                 GameActivity.Instance.ga_Spell.selectedSpell = selectedSpell;
-                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUISelected);
+                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UISelected");
                 GameActivity.Instance.ResetSelectedTurret();
                 HighlightSelectedSpellUI(selectedUI);
 
@@ -315,7 +315,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
             else
             {
                 // Spell in cooldown, can't select
-                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
+                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UIError");
                 CoroutineDisplayDialog("Spell is still in cooldown.");
             }
         }

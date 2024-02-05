@@ -29185,7 +29185,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c97742f5b7ccd764fa667c21375efee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellSO: {fileID: 0}
+  spellSO: {fileID: 11400000, guid: 052071014d9d6be42bd13d2017e8350b, type: 2}
   spellEnemyBindingList: []
 --- !u!1 &3418261194079756379
 GameObject:

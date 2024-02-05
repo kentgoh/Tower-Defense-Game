@@ -4925,7 +4925,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1b056d3a60d68f46b2f6dbe38ad5f58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellSO: {fileID: 0}
+  spellSO: {fileID: 11400000, guid: 6ca7249ad0aebee4ebc3dec57be3e812, type: 2}
   spellEnemyBindingList: []
   stunDuration: 2
 --- !u!1 &4795754057945702511
