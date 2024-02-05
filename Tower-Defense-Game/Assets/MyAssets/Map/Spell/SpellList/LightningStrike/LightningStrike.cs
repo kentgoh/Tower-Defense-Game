@@ -1,7 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using static GlobalPredefinedModel;
 
@@ -36,7 +33,7 @@ public class LightningStrike : SpellEnemyInteraction
 
     public override IEnumerator SpellLifecycle(float duration)
     {
-        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.LightningStrikeSE);
+        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Spell, "LightningStrikeSE");
         yield return new WaitForSeconds(duration);
         Destroy(gameObject);
     }

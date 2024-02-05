@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1491989454606783302}
   - component: {fileID: 8773732378662150405}
   - component: {fileID: 5215443250566757673}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4832,7 +4832,7 @@ GameObject:
   - component: {fileID: 1025236002006986783}
   - component: {fileID: 4599520164192103926}
   - component: {fileID: 5882175282843604067}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9653,8 +9653,8 @@ GameObject:
   - component: {fileID: 4404234002714815323}
   - component: {fileID: 9195093492647317378}
   - component: {fileID: 1418654615231359557}
-  m_Layer: 0
-  m_Name: EffectRange
+  m_Layer: 7
+  m_Name: MagneticField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9736,7 +9736,7 @@ GameObject:
   - component: {fileID: 2804067109331498982}
   - component: {fileID: 3346728810411978980}
   - component: {fileID: 4039223341613263899}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: DarkSparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14557,7 +14557,7 @@ GameObject:
   - component: {fileID: 9185728468596692690}
   - component: {fileID: 3583072411178434397}
   - component: {fileID: 7856314735424366420}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: DarkSparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19378,7 +19378,7 @@ GameObject:
   - component: {fileID: 403891571761071340}
   - component: {fileID: 3643502017086622701}
   - component: {fileID: 1756360500080271314}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24188,6 +24188,51 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!1 &2701052846841469101
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1249737572848176402}
+  - component: {fileID: 1197189474891750599}
+  m_Layer: 2
+  m_Name: Collider
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1249737572848176402
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2701052846841469101}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3423388300971593625}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &1197189474891750599
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2701052846841469101}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 3, y: 1, z: 3}
+  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1 &3012338937482764485
 GameObject:
   m_ObjectHideFlags: 0
@@ -24197,7 +24242,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7241345230520852847}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24232,7 +24277,7 @@ GameObject:
   - component: {fileID: 1750236544654867038}
   - component: {fileID: 5675525782637387835}
   - component: {fileID: 5766513946182760470}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MagneticBolt
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29103,7 +29148,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3423388300971593625}
   - component: {fileID: -262359700159942987}
-  - component: {fileID: 63694396007476834}
   m_Layer: 7
   m_Name: MagneticBoltPrefab
   m_TagString: Spell
@@ -29125,6 +29169,7 @@ Transform:
   m_Children:
   - {fileID: 1750236544654867038}
   - {fileID: 4404234002714815323}
+  - {fileID: 1249737572848176402}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -29140,21 +29185,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c97742f5b7ccd764fa667c21375efee1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spellSO: {fileID: 0}
+  spellSO: {fileID: 11400000, guid: 052071014d9d6be42bd13d2017e8350b, type: 2}
   spellEnemyBindingList: []
---- !u!65 &63694396007476834
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3377181292992421420}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 1, z: 3}
-  m_Center: {x: 0, y: 0.4, z: 0}
 --- !u!1 &3418261194079756379
 GameObject:
   m_ObjectHideFlags: 0
@@ -29164,7 +29196,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4898797111308880926}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Down
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -29199,7 +29231,7 @@ GameObject:
   - component: {fileID: 5324241893041583387}
   - component: {fileID: 5468962373977347099}
   - component: {fileID: 8313008144135428161}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: DarkSparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -34020,7 +34052,7 @@ GameObject:
   - component: {fileID: 8077277429214295859}
   - component: {fileID: 8814899824254485493}
   - component: {fileID: 7058821668315888458}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: DarkSparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38842,7 +38874,7 @@ GameObject:
   - component: {fileID: 3981602216945372993}
   - component: {fileID: 3894172174655323347}
   - component: {fileID: 5766682105503094356}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38936,7 +38968,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8379397914262456235}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Up
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38969,7 +39001,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7399978977443335401}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39002,7 +39034,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6272197914324594852}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: MagneticField
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -39039,7 +39071,7 @@ GameObject:
   - component: {fileID: 2881447672142315144}
   - component: {fileID: 2663891263593141582}
   - component: {fileID: 5092382781368286731}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}

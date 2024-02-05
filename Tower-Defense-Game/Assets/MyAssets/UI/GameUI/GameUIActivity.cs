@@ -21,7 +21,6 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
     public bool mouseReleasedOnCameraMoveButton = true;
     int directionIndex = 0;
 
-
     void Awake()
     {
         if (!Instance)
@@ -33,9 +32,11 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
     // Update is called once per frame
     void Update()
     {
-        MouseHoverDetection();
-        ZoomCamera();
-        MoveCamera();
+        if (Time.timeScale != 0) {
+            MouseHoverDetection();
+            ZoomCamera();
+            MoveCamera();
+        }
 
     }
 
@@ -67,6 +68,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
 
                     EnablePointedSpellDetailsUI(pointedSpellName);
                     tagMatched = true;
+                    GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.Spell_UI);
                     break;
 
                 }
@@ -80,6 +82,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
                         DisableAllTurretDetailsUI();
                         EnablePointedTurretDetailsUI(turret);
                         tagMatched = true;
+                        GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.Turret_UI);
                         break;
                     }
                 }
@@ -90,6 +93,10 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
                 // Mouse pointer does point to more than one gameObject but not spellUI or turretUI
                 DisableAllSpellDetailsUI();
                 DisableAllTurretDetailsUI();
+
+                if(GameActivity.Instance.ga_MouseState.mouseState == MouseState.Spell_UI || GameActivity.Instance.ga_MouseState.mouseState == MouseState.Turret_UI)
+                    GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.None);
+
             }
 
         }
@@ -98,6 +105,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
             DisableAllSpellDetailsUI();
             DisableAllTurretDetailsUI();
         }
+
     }
 
     // Mouse click activity
@@ -159,17 +167,17 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
             if (turretCount > 0)
             {
                 GameActivity.Instance.SetSelectedTurretByTurretName(selectedUI.name, parentOfSelectedUI);
-                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUISelected);
+                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UISelected");
             }
             else
             {
-                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
+                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UIError");
                 CoroutineDisplayDialog("Turret not available to build.");
             }
         }
         else
         {
-            AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
+            AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UIError");
             CoroutineDisplayDialog("You don't have sufficient coin to build this turret.");
         }
         GameActivity.Instance.ResetSelectedSpell();
@@ -256,6 +264,16 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
         camera.fieldOfView = 70;
     }
 
+    public void PointerOnCameraPanel()
+    {
+        GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.Button_UI);
+    }
+
+    public void PointerOutCameraPanel()
+    {
+        GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.None);
+    }
+
     // ==================== Spell UI Related ====================
     public void DisableAllSpellDetailsUI()
     {
@@ -289,7 +307,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
             if(selectedSpell.currentCooldown == 0)
             {
                 GameActivity.Instance.ga_Spell.selectedSpell = selectedSpell;
-                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUISelected);
+                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UISelected");
                 GameActivity.Instance.ResetSelectedTurret();
                 HighlightSelectedSpellUI(selectedUI);
 
@@ -297,7 +315,7 @@ public class GameUIActivity : MonoBehaviour, IPointerClickHandler
             else
             {
                 // Spell in cooldown, can't select
-                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.TurretUIError);
+                AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UIError");
                 CoroutineDisplayDialog("Spell is still in cooldown.");
             }
         }

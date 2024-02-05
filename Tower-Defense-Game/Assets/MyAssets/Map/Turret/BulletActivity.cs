@@ -41,14 +41,12 @@ public class BulletActivity : MonoBehaviour
         {
             // Make the laser follow and rotate around the turret
             FollowBulletPoint();
-            StartCoroutine("LaserCountdown", laserExistTime);
+            StartCoroutine(LaserCountdown(laserExistTime));
 
             if (transform.GetComponent<AudioSource>())
             {
                 audioSource = transform.GetComponent<AudioSource>();
-                
-                if(AudioManager.Instance.soundOn)
-                    audioSource.PlayOneShot(audioSource.clip);
+                AudioManager.Instance.PlayLoopSoundFromGameObject(audioSource);
             }
         }
         else if (turretName.Equals("TurretC"))
@@ -89,11 +87,18 @@ public class BulletActivity : MonoBehaviour
         if(collider.transform.tag == "Enemy")
         {
             if(turretName.Equals("TurretA") && collider.gameObject == target)
+            {
                 Destroy(gameObject);
+            }
+
         }
         if(collider.transform.tag == "Base")
         {
-            if (turretName.Equals("TurretC"))
+            if (turretName.Equals("TurretA"))
+            {
+                Destroy(gameObject);
+            }
+            else if (turretName.Equals("TurretC"))
             {
                 StartCoroutine("Explosion");
             }
@@ -102,14 +107,16 @@ public class BulletActivity : MonoBehaviour
     }
     IEnumerator LaserCountdown(float countDown)
     {
-        while (Time.timeScale >= 1)
-        {
+        while(Time.timeScale != 0) { 
             yield return new WaitForSeconds(1);
+        
             countDown--;
             if (countDown == 0) { 
                 // Stop the soundEffect
                 if(audioSource != null)
                     audioSource.Stop();
+
+                AudioManager.Instance.RemoveFromLoopingOneShotAudioList(audioSource);
                 Destroy(gameObject);
             }
         }
@@ -117,11 +124,11 @@ public class BulletActivity : MonoBehaviour
 
     IEnumerator Explosion()
     {
-        GameObject explosionRange = transform.Find("ExplosionRange").gameObject;
+        GameObject explosionRange = transform.Find("Collider").gameObject;
         explosionRange.SetActive(true);
 
-        if (AudioManager.Instance.soundOn)
-            audioSource.PlayOneShot(audioSource.clip);
+        if (audioSource != null)
+            AudioManager.Instance.PlaySoundFromGameObject(audioSource);
 
         transform.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
         transform.Find("Bullet").gameObject.SetActive(false);

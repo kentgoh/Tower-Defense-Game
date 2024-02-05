@@ -4,63 +4,89 @@ using static GlobalPredefinedModel;
 
 public class MapActivity : MonoBehaviour
 {
+    public static MapActivity Instance;
+
     // Spell
     public GameObject spellIndicatorPrefab;
     private GameObject spellIndicator;
 
+    void Awake()
+    {
+        if (!Instance)
+            Instance = this;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        ShowSpellIndicator();
-        UseSpell();
+        if (Time.timeScale != 0)
+        {
+            ShowSpellIndicator();
+            UseSpell();
+        }
     }
 
     private void ShowSpellIndicator()
     {
         Camera camera = GameActivity.Instance.camera;
 
-        if (GameActivity.Instance.ga_Spell.selectedSpell != null)
-        {
+        if (!GameActivity.Instance.ga_MouseState.IsOnUI()) { 
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out RaycastHit raycastHit, Mathf.Infinity, LayerMask.GetMask("Map")))
             {
                 if (raycastHit.collider.CompareTag("Base"))
                 {
-                    Vector3 pointedBaseLocation = raycastHit.point;
-                    pointedBaseLocation.y = 0.5f;
-                    // The x and z value will have the value of 0.5 according to the position of the mouse pointed on the base
-                    // Example:
-                    //      0.2 => 0.5
-                    //      -1.7 => -1.5
-                    pointedBaseLocation.x = Mathf.Sign(pointedBaseLocation.x) * (Mathf.Floor(Mathf.Abs(pointedBaseLocation.x)) + 0.5f);
-                    pointedBaseLocation.z = Mathf.Sign(pointedBaseLocation.z) * (Mathf.Floor(Mathf.Abs(pointedBaseLocation.z)) + 0.5f);
-
-                    // Create spellIndicator if it does not exist yet
-                    if (spellIndicator == null)
-                        spellIndicator = Instantiate(spellIndicatorPrefab, pointedBaseLocation, Quaternion.identity);
-                    // Only destroy old spellIndicator if the instantiate position need to be changed
-                    else if (!pointedBaseLocation.Equals(spellIndicator.transform.position))
+                    GameActivity.Instance.ga_MouseState.UpdateMouseState(MouseState.Base_Map);
+                    if (GameActivity.Instance.ga_Spell.selectedSpell != null)
                     {
-                        Destroy(spellIndicator);
-                        spellIndicator = Instantiate(spellIndicatorPrefab, pointedBaseLocation, Quaternion.identity);
+                        Vector3 pointedBaseLocation = raycastHit.point;
+
+                        pointedBaseLocation.y = 0.5f;
+                        // The x and z value will have the value of 0.5 according to the position of the mouse pointed on the base
+                        // Example:
+                        //      0.2 => 0.5
+                        //      -1.7 => -1.5
+                        pointedBaseLocation.x = Mathf.Sign(pointedBaseLocation.x) * (Mathf.Floor(Mathf.Abs(pointedBaseLocation.x)) + 0.5f);
+                        pointedBaseLocation.z = Mathf.Sign(pointedBaseLocation.z) * (Mathf.Floor(Mathf.Abs(pointedBaseLocation.z)) + 0.5f);
+
+                        // Create spellIndicator if it does not exist yet
+                        if (spellIndicator == null)
+                            spellIndicator = Instantiate(spellIndicatorPrefab, pointedBaseLocation, Quaternion.identity);
+                        // Only destroy old spellIndicator if the instantiate position need to be changed
+                        else if (!pointedBaseLocation.Equals(spellIndicator.transform.position))
+                        {
+                            Destroy(spellIndicator);
+                            spellIndicator = Instantiate(spellIndicatorPrefab, pointedBaseLocation, Quaternion.identity);
+                        }
+
                     }
+                    // No spell selected
+                    else
+                    {
+                        if (spellIndicator != null)
+                            Destroy(spellIndicator);
+                    }
+
                 }
-                else
-                {
-                    if(spellIndicator != null)
+                // Mouse not pointed to base, remove any spellIndicator if exist
+                else { 
+                    if (spellIndicator != null)
                         Destroy(spellIndicator);
                 }
-
-
             }
         }
-        else
-            Destroy(spellIndicator);
+        // Ray blocked by UI, remove any spellIndicator if exist
+        else{
+            if (spellIndicator != null)
+                Destroy(spellIndicator);
+        }
+
+
     }
     private void UseSpell()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && !GameActivity.Instance.ga_MouseState.IsOnUI())
         {
             Camera camera = GameActivity.Instance.camera;
             Ray ray = camera.ScreenPointToRay(Input.mousePosition);
@@ -78,7 +104,10 @@ public class MapActivity : MonoBehaviour
                         GameActivity.Instance.ResetSelectedSpell();
                     }
                     else
-                        Debug.Log("Selected Spell not found");
+                    {
+                        AudioManager.Instance.PlaySound(AudioManager.AudioSourceType.Standard, "UIError");
+                        GameUIActivity.Instance.CoroutineDisplayDialog("Selected Spell not found.");
+                    }
             }
 
         }

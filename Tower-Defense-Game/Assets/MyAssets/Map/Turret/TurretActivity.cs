@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class TurretActivity : MonoBehaviour
 {
@@ -91,8 +88,8 @@ public class TurretActivity : MonoBehaviour
         
         if (animator != null)
             animator.SetTrigger("Fire");
-        if (audioSource != null && AudioManager.Instance.soundOn)
-            audioSource.PlayOneShot(audioSource.clip);
+        if (audioSource != null)
+            AudioManager.Instance.PlaySoundFromGameObject(audioSource);
 
         bulletCurrentCooldown = bulletCooldown;
     }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static GlobalPredefinedModel;
@@ -57,9 +56,10 @@ public class MagneticBolt : SpellEnemyInteraction
 
     public override IEnumerator SpellLifecycle(float duration)
     {
-        AudioSource audioSource = AudioManager.Instance.PlayLoopSound(AudioManager.AudioSourceType.MagneticBoltSE);
+        AudioSource audioSource = AudioManager.Instance.PlayLoopSound(AudioManager.AudioSourceType.Spell, "MagneticBoltSE");
         yield return new WaitForSeconds(duration);
         audioSource.Stop();
+        AudioManager.Instance.RemoveFromLoopingOneShotAudioList(audioSource);
         Destroy(gameObject);
     }
 
